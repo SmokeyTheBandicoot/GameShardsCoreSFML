@@ -19,6 +19,7 @@ Public Class SFMLButton
     Private _SFMLFont As Font
     Private _SFMLFontSize As Single
     Private _Border As List(Of Integer) = {5, 5, 5, 5}.ToList
+    Private _AutoPadding As Boolean
 
     'Public Sub New(text As String, size As Drawing.Size, location As Drawing.Point, Spritenorm As Sprite, spriteToggl As Sprite, colornorm As Color, colortoggl As Color, toggleable As Boolean, togglechangessprite As Boolean, togglechangescolor As Boolean, sfmlfont As Font, sfmlfontsize As Single)
     '    text = text
@@ -51,6 +52,15 @@ Public Class SFMLButton
         End Get
         Set(value As Boolean)
             _Toggleable = value
+        End Set
+    End Property
+
+    Public Property AutoPadding() As Boolean
+        Get
+            Return _AutoPadding
+        End Get
+        Set(value As Boolean)
+            _AutoPadding = value
         End Set
     End Property
 
@@ -170,6 +180,10 @@ Public Class SFMLButton
         Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
         DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
         DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+
+        If AutoPadding Then
+            Border = {CInt(SFMLFontSize), 5, CInt(-SFMLFontSize \ 2), 5}.ToList
+        End If
 
         Select Case True
             Case TextAlign = Drawing.ContentAlignment.MiddleLeft
