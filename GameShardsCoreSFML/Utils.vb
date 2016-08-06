@@ -1,0 +1,25 @@
+﻿Imports System.Drawing
+Imports System.Reflection
+Imports SFML.Graphics
+Imports SFML.System
+Public Class Utils
+    Public Function RectToIntRect(ByVal rect As Rectangle) As IntRect
+        Return New IntRect(rect.Left, rect.Top, rect.Width, rect.Height)
+    End Function
+    Public Function PointToVector2F(ByVal point As Point) As Vector2f
+        Return New Vector2f(point.X, point.Y)
+    End Function
+
+    Public Function ConvertColor(ByVal color As Drawing.Color) As SFML.Graphics.Color
+        Return New SFML.Graphics.Color(color.R, color.G, color.B, color.A)
+    End Function
+
+    Public Function ConvertFont(font As Drawing.Font, Optional ByRef result As Boolean = False) As SFML.Graphics.Font
+        'Try
+        '    IO.File.Copy("C:\\Windows\Fonts\" + font.FontFamily, Assembly.GetExecutingAssembly().Location + "\" + font.FontFamily)
+        'Catch ex As Exception
+
+        'End Try
+        Return New SFML.Graphics.Font(font.FontFamily.Name.ToString + ".ttf")
+    End Function
+End Class
