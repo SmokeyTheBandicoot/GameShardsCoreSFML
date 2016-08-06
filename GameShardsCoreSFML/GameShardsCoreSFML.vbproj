@@ -100,6 +100,9 @@
     <Compile Include="SFMLButton.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils.vb" />
   </ItemGroup>
   <ItemGroup>

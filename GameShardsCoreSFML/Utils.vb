@@ -22,4 +22,8 @@ Public Class Utils
         'End Try
         Return New SFML.Graphics.Font(font.FontFamily.Name.ToString + ".ttf")
     End Function
+
+    Public Function InverseConvertFont(ByVal font As SFML.Graphics.Font, ByVal SFMLFontSize As Integer) As Drawing.Font
+        Return New Drawing.Font(font.ToString, SFMLFontSize * 3 / 4)
+    End Function
 End Class
