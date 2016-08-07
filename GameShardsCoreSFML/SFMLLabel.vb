@@ -7,9 +7,40 @@ Public Class SFMLLabel
 
     Dim ut As New Utils
 
+    Public Shadows Autosize As Boolean = False
+    Private _Toggleable As Boolean = False
+    Private _IsToggled As Boolean = False
+    Private _ColorToggled As New Color(128, 128, 128, 0)
     Private _DisplayText As New Text()
     Private _SFMLFont As Font
     Private _SFMLFontSize As Single
+
+    Public Property Toggleable() As Boolean
+        Get
+            Return _Toggleable
+        End Get
+        Set(value As Boolean)
+            _Toggleable = value
+        End Set
+    End Property
+
+    Public Property IsToggled() As Boolean
+        Get
+            Return _IsToggled
+        End Get
+        Set(value As Boolean)
+            _IsToggled = value
+        End Set
+    End Property
+
+    Public Property ColorToggled() As Color
+        Get
+            Return _ColorToggled
+        End Get
+        Set(value As Color)
+            _ColorToggled = value
+        End Set
+    End Property
 
     Public Property DisplayText() As Text
         Get
@@ -40,20 +71,32 @@ Public Class SFMLLabel
 
     Public Sub Draw(ByRef w As RenderWindow)
 
-        Dim textSize As System.Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
-        DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
-        DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+        If Visible Then
 
-        Select Case True
-            Case TextAlign = Drawing.ContentAlignment.MiddleLeft
-                DisplayText.Position = New Vector2f(Left + Padding.Left, Top + Height / 2 - Font.Size / 2)
-            Case TextAlign = Drawing.ContentAlignment.MiddleCenter
-                DisplayText.Position = New Vector2f(Left + Width / 2 - textSize.Width / 2, Top + Height / 2 - textSize.Height / 2)
-            Case Else
-                DisplayText.Position = New Vector2f(Left, Top)
-                MsgBox(TextAlign.ToString)
-        End Select
+            Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
+            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
 
-        w.Draw(DisplayText)
+            If Toggleable Then
+                If IsToggled Then
+                    DisplayText.Color = ColorToggled
+                Else
+                    DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+                End If
+            End If
+
+
+            Select Case True
+                Case TextAlign = Drawing.ContentAlignment.MiddleLeft
+                    DisplayText.Position = New Vector2f(Left, (Top + Height / 2) - textSize.Height / 2)
+                Case TextAlign = Drawing.ContentAlignment.MiddleCenter
+                    DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
+                Case TextAlign = Drawing.ContentAlignment.MiddleRight
+                    DisplayText.Position = New Vector2f(Right - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
+            End Select
+
+
+            w.Draw(DisplayText)
+        End If
+
     End Sub
 End Class

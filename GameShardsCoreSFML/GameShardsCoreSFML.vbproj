@@ -103,6 +103,9 @@
     <Compile Include="SFMLLabel.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils.vb" />
   </ItemGroup>
   <ItemGroup>

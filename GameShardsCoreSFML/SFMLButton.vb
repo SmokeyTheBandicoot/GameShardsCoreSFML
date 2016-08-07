@@ -15,6 +15,7 @@ Public Class SFMLButton
     Private _SpriteToggled As New Sprite
     Private _ColorNormal As New Color(255, 255, 255, 0)
     Private _ColorToggled As New Color(128, 128, 128, 0)
+    Private _ColorDisabled As New Color(50, 50, 50, 0)
     Private _DisplayText As New Text()
     Private _SFMLFont As Font
     Private _SFMLFontSize As Single
@@ -109,6 +110,15 @@ Public Class SFMLButton
         End Set
     End Property
 
+    Public Property ColorDisabled() As Color
+        Get
+            Return _ColorDisabled
+        End Get
+        Set(value As Color)
+            _ColorDisabled = value
+        End Set
+    End Property
+
     Public Property DisplayText() As Text
         Get
             Return _DisplayText
@@ -145,36 +155,45 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Sub Draw(ByRef w As RenderWindow)
+    Public Function CalculateSizeFromText() As Drawing.Size
+        Return TextRenderer.MeasureText(Text, Font)
+    End Function
 
-        SpriteNormal.Scale = New Vector2f(Width / SpriteNormal.Texture.Size.X, Height / SpriteNormal.Texture.Size.Y)
+    Public Sub Draw(ByRef w As RenderWindow)
+        If Visible Then
+            SpriteNormal.Scale = New Vector2f(Width / SpriteNormal.Texture.Size.X, Height / SpriteNormal.Texture.Size.Y)
         SpriteToggled.Scale = New Vector2f(Width / SpriteToggled.Texture.Size.X, Height / SpriteToggled.Texture.Size.Y)
 
         SpriteToggled.Position = New Vector2f(Location.X, Location.Y)
         SpriteNormal.Position = New Vector2f(Location.X, Location.Y)
 
-        If Toggleable Then
-            If ToggleChangesColor Then
-                If IsToggled Then
-                    _SpriteNormal.Color = ColorNormal
-                    _SpriteToggled.Color = ColorNormal
-                Else
-                    _SpriteNormal.Color = ColorToggled
-                    _SpriteToggled.Color = ColorToggled
-                End If
-            End If
+            If Toggleable Then
+                If Enabled Then
 
-            If ToggleChangesSprite Then
-                If IsToggled Then
-                    w.Draw(_SpriteToggled)
+                    If ToggleChangesColor Then
+                        If IsToggled Then
+                            _SpriteNormal.Color = ColorNormal
+                            _SpriteToggled.Color = ColorNormal
+                        Else
+                            _SpriteNormal.Color = ColorToggled
+                            _SpriteToggled.Color = ColorToggled
+                        End If
+                    End If
+                Else
+                    _SpriteNormal.Color = Colordisabled
+                    _SpriteToggled.Color = Colordisabled
+                End If
+                If ToggleChangesSprite Then
+                        If IsToggled Then
+                            w.Draw(_SpriteToggled)
+                        Else
+                            w.Draw(_SpriteNormal)
+                        End If
+                    Else
+                        w.Draw(_SpriteNormal)
+                    End If
                 Else
                     w.Draw(_SpriteNormal)
-                End If
-            Else
-                w.Draw(_SpriteNormal)
-            End If
-        Else
-            w.Draw(_SpriteNormal)
         End If
 
         Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
@@ -194,6 +213,7 @@ Public Class SFMLButton
                 DisplayText.Position = New Vector2f((Right - Border(2)) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
         End Select
 
-        w.Draw(DisplayText)
+            w.Draw(DisplayText)
+        End If
     End Sub
 End Class
