@@ -36,6 +36,10 @@ Public Class GUI
         For x = 0 To Controls.Count - 1
             If TypeOf Controls(x) Is SFMLButton Then
                 DirectCast(Controls(x), SFMLButton).Draw(window)
+            ElseIf TypeOf Controls(x) Is SFMLTextbox Then
+                DirectCast(Controls(x), SFMLTextbox).draw(window)
+            ElseIf TypeOf Controls(x) Is SFMLKeyboard Then
+                DirectCast(Controls(x), SFMLKeyboard).draw(window)
             End If
         Next
     End Sub

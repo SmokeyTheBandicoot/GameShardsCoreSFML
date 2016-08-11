@@ -100,12 +100,19 @@
     <Compile Include="SFMLButton.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLKeyboard.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLLabel.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLPanel.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLTextbox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Shared.vb" />
     <Compile Include="Utils.vb" />
   </ItemGroup>
   <ItemGroup>
