@@ -155,30 +155,24 @@ Public Class SFMLKeyboard
             Return _KeyPadding
         End Get
         Set(ByVal value As Byte)
+            'For y = 0 To 4
+            '    For x = 0 To 14
+            '        Keys((y * 15 - 1) + x).Location = New Point(Location.X + CalculateKeySize.Width * x + x * value, Location.Y + CalculateKeySize.Height * y + y * value)
+            '    Next
+            'Next
+            'If value <> _KeyPadding Then
+            '    SetKeys(Ut.PointToVector2F(Me.Location), New Vector2f(Size.Width, Size.Height), value)
+            'End If
             _KeyPadding = value
         End Set
     End Property
 
-    Public Sub New(location As Vector2f, size As Vector2f)
-        For y = 0 To 4
-            For x = 0 To 14
-                Dim b As New SFMLButton
-                With b
-                    .TextAlign = ContentAlignment.MiddleCenter
-                    .Text = chars(y * 14 + x)
-                    '.SFMLFont = New SFML.Graphics.Font(Font)
-                    .SFMLFont = Ut.ConvertFont(New Drawing.Font("arial", 11))
-                    .SFMLFontSize = Font.SizeInPoints
-                    '.Font = New Drawing.Font("crash-a-like", .SFMLFontSize)
-                    .Toggleable = True
-                    .ToggleChangesSprite = False
-                    .ToggleChangesColor = True
-                    .Size = New Size(CalculateKeySize.Width, CalculateKeySize.Height)
-                    .Location = New Point(location.X + CalculateKeySize.Width * x + x * KeyPadding, location.Y + CalculateKeySize.Height * y + y * KeyPadding)
-                    Keys.Add(b)
-                End With
-            Next
-        Next
+    Public Sub New(locat As Vector2f, size As Vector2f)
+        SetKeys(locat, size, 0)
+    End Sub
+
+    Public Sub New()
+        SetKeys(New Vector2f(0, 0), New Vector2f(32 * 15, 32 * 5), 0)
     End Sub
 
     Public Function CalculateKeySize() As Size
@@ -193,6 +187,34 @@ Public Class SFMLKeyboard
             End If
         Next
 
+    End Sub
+
+    Sub SetKeys(locat As Vector2f, sz As Vector2f, padd As Integer)
+        SizeWH = New Size(sz.X, sz.Y)
+        Location = New Point(locat.X, locat.Y)
+        KeyPadding = padd
+        Keys.Clear()
+        Keys = Nothing
+        Keys = New List(Of SFMLButton)
+        For y = 0 To 4
+            For x = 0 To 14
+                Dim b As New SFMLButton
+                With b
+                    .TextAlign = ContentAlignment.MiddleCenter
+                    .Text = chars(y * 15 + x)
+                    '.SFMLFont = New SFML.Graphics.Font(Font)
+                    .SFMLFont = Ut.ConvertFont(New Drawing.Font("arial", 11))
+                    .SFMLFontSize = Font.SizeInPoints
+                    '.Font = New Drawing.Font("crash-a-like", .SFMLFontSize)
+                    .Toggleable = True
+                    .ToggleChangesSprite = False
+                    .ToggleChangesColor = True
+                    .Size = New Size(CalculateKeySize.Width, CalculateKeySize.Height)
+                    .Location = New Point(locat.X + CalculateKeySize.Width * x + x * KeyPadding, locat.Y + CalculateKeySize.Height * y + y * KeyPadding)
+                    Keys.Add(b)
+                End With
+            Next
+        Next
     End Sub
 
     Public Sub draw(ByRef w As RenderWindow)
