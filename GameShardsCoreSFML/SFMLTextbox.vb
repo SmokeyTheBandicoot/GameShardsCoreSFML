@@ -1,25 +1,51 @@
 ﻿Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
+Imports GameShardsCore.Base.Geometry
+Imports System.Drawing
 
 Public Class SFMLTextbox
-    Inherits TextBox
+    Inherits Windows.Forms.TextBox
 
     Dim ut As New Utils
+    Dim GGeom As New Geometry
     Dim r As New RectangleShape
 
+    'Used for max length
+    Dim c() As Char = Text.ToCharArray
+
+    'Properties
     Private _IsActive As Boolean = False
-    Private _ColorReadonly As New Color(196, 196, 196)
-    Private _ColorDisabled As New Color(128, 128, 128)
-    Private _Backcolor As New Color(255, 255, 255)
-    Private _BorderColor As New Color(0, 0, 0)
-    Private _BorderColorFocused As New Color(128, 128, 128)
+    Private _ColorReadonly As New SFML.Graphics.Color(196, 196, 196)
+    Private _ColorDisabled As New SFML.Graphics.Color(128, 128, 128)
+    Private _Backcolor As New SFML.Graphics.Color(255, 255, 255)
+    Private _BorderColor As New SFML.Graphics.Color(255, 0, 0)
+    Private _BorderColorFocused As New SFML.Graphics.Color(128, 128, 128)
     Private _DisplayText As New Text
-    Private _SFMLFont As Font
+    Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single
     Private _ID As Long
     Private _IDStr As String
+    Private _BoundKeyboard As SFMLKeyboard
+    Private _TextOffset As Vector2f = New Vector2f(0, 0)
 
+    Public Property TextOffset As Vector2f
+        Get
+            Return _TextOffset
+        End Get
+        Set(value As Vector2f)
+            _TextOffset = value
+        End Set
+    End Property
+
+    Public Property BoundKeyboard As SFMLKeyboard
+        Get
+            Return _BoundKeyboard
+        End Get
+        Set(ByVal value As SFMLKeyboard)
+            _BoundKeyboard = value
+        End Set
+    End Property
 
     Public Property IsActive As Boolean
         Get
@@ -30,20 +56,20 @@ Public Class SFMLTextbox
         End Set
     End Property
 
-    Public Property ColorReadonly As Color
+    Public Property ColorReadonly As SFML.Graphics.Color
         Get
             Return _ColorReadonly
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _ColorReadonly = value
         End Set
     End Property
 
-    Public Property ColorDisabled As Color
+    Public Property ColorDisabled As SFML.Graphics.Color
         Get
             Return _ColorDisabled
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _ColorDisabled = value
         End Set
     End Property
@@ -57,11 +83,11 @@ Public Class SFMLTextbox
         End Set
     End Property
 
-    Public Property SFMLFont As Font
+    Public Property SFMLFont As SFML.Graphics.Font
         Get
             Return _SFMLFont
         End Get
-        Set(ByVal value As Font)
+        Set(ByVal value As SFML.Graphics.Font)
             _SFMLFont = value
         End Set
     End Property
@@ -93,51 +119,76 @@ Public Class SFMLTextbox
         End Set
     End Property
 
-    Public Sub draw(ByRef w As RenderWindow)
+    Sub SetActive(ByVal p As Drawing.Point)
+        If GGeom.CheckIfRectangleIntersectsPoint(ut.FloatRectToRect(r.GetGlobalBounds), p) OrElse GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) Then
+            IsActive = True
+        Else
+            IsActive = False
+        End If
+    End Sub
+
+    Public Sub Draw(ByRef w As RenderWindow)
         If Visible Then
 
+            r = New RectangleShape
 
-            If Enabled Then
-                If [ReadOnly] Then
-                    DisplayText.Color = ColorReadonly
-                Else
-                    DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
-                End If
-            Else
-                DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+            If MaxLength > -1 AndAlso Text.Length > MaxLength Then
+                'ReDim Preserve c(MaxLength - 1)
+                'Text = (String.Join("", c))
+                Text = Text.Remove(MaxLength)
             End If
 
-            Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
+            If Enabled Then
+                If IsActive Then
+                    DisplayText.Color = ColorReadonly
+                Else
+                    DisplayText.Color = New SFML.Graphics.Color(ut.ConvertColor(ForeColor))
+                End If
+            Else
+                DisplayText.Color = New SFML.Graphics.Color(ut.ConvertColor(ForeColor))
+            End If
+
+
             DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+            'Dim textSize As New FloatRect()
+            'textSize = 
 
-            Select Case True
-                Case TextAlign = Drawing.ContentAlignment.MiddleLeft
-                    DisplayText.Position = New Vector2f(Left, (Top + Height / 2) - textSize.Height / 2)
-                Case TextAlign = Drawing.ContentAlignment.MiddleCenter
-                    DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
-                Case TextAlign = Drawing.ContentAlignment.MiddleRight
-                    DisplayText.Position = New Vector2f((Right) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
-            End Select
+            'Select Case True
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleLeft
+            '        DisplayText.Position = New Vector2f(Left, (Top + Height / 2) - textSize.Height / 2)
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleCenter
+            '        DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleRight
+            '        DisplayText.Position = New Vector2f((Right) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
+            'End Select
 
-            r.FillColor = Color.Transparent
+
+
+            'DisplayText.Position = New Vector2f(Location.X, Location.Y)
+
+            r.FillColor = SFML.Graphics.Color.Transparent
+            r.OutlineThickness = 2
             If IsActive Then
                 r.OutlineColor = _BorderColorFocused
             Else
                 r.OutlineColor = _BorderColor
             End If
-            r.Size = New Vector2f(textSize.Width + 6, textSize.Height + 4)
+
+            DisplayText.Position = Common.GetPosition(ContentAlignment.MiddleLeft, DisplayText.GetLocalBounds, New FloatRect(Left, Top, Width, Height), TextOffset)
+
+            Size = New Size(Size.Width, DisplayText.GetLocalBounds.Height + SFMLFontSize / 4)
+
+            r.Size = New Vector2f(Size.Width, DisplayText.GetLocalBounds.Height + SFMLFontSize / 4)
             r.Position = New Vector2f(Location.X, Location.Y)
 
             w.Draw(r)
             w.Draw(DisplayText)
+
+            If IsActive Then
+                'MsgBox("is active!")
+                BoundKeyboard.DrawToBoundTextbox(w)
+            End If
         End If
     End Sub
-
-    'Public Sub UpdateText(ByVal e As SFML.Window.KeyEventArgs)
-    '    Text += e.Code.ToString
-    '    If e.Code = SFML.Window.Keyboard.Key.LControl Then
-    '        Text = String.Empty
-    '    End If
-    'End Sub
 
 End Class

@@ -25,11 +25,21 @@ Public Class SFMLButton
     Private _DisplayText As New Text()
     Private _SFMLFont As Font
     Private _SFMLFontSize As Single
-    Private _Border As List(Of Integer) = {5, 5, 5, 5}.ToList
-    Private _AutoPadding As Boolean
+    'Private _TextOffset As Vector2f = New Vector2f(0, SFMLFontSize / 2)
+    ''Private _Border As List(Of Integer) = {5, 5, 5, 5}.ToList
+    ''Private _AutoPadding As Boolean
     Private _ID As Long
     Private _IDStr As String
+    Private _TextOffset As Vector2f = New Vector2f(0, -SFMLFontSize / 2)
 
+    Public Property TextOffset As Vector2f
+        Get
+            Return _TextOffset
+        End Get
+        Set(value As Vector2f)
+            _TextOffset = value
+        End Set
+    End Property
 
     Public Property DrawBorder As Boolean
         Get
@@ -112,14 +122,14 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Property AutoPadding() As Boolean
-        Get
-            Return _AutoPadding
-        End Get
-        Set(value As Boolean)
-            _AutoPadding = value
-        End Set
-    End Property
+    'Public Property AutoPadding() As Boolean
+    '    Get
+    '        Return _AutoPadding
+    '    End Get
+    '    Set(value As Boolean)
+    '        _AutoPadding = value
+    '    End Set
+    'End Property
 
     Public Property IsToggled() As Boolean
         Get
@@ -184,14 +194,14 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Property Border As List(Of Integer)
-        Get
-            Return _Border
-        End Get
-        Set(value As List(Of Integer))
-            _Border = value
-        End Set
-    End Property
+    'Public Property Border As List(Of Integer)
+    '    Get
+    '        Return _Border
+    '    End Get
+    '    Set(value As List(Of Integer))
+    '        _Border = value
+    '    End Set
+    'End Property
 
     Public Property SFMLFont() As Font
         Get
@@ -217,6 +227,8 @@ Public Class SFMLButton
 
     Public Sub Draw(ByRef w As RenderWindow)
         If Visible Then
+
+            Bounds = New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height)
 
             r = New RectangleShape(New Vector2f(Width, Height))
             r.Position = New Vector2f(Location.X, Location.Y)
@@ -264,24 +276,29 @@ Public Class SFMLButton
                 w.Draw(r)
             End If
 
-            Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
-                DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
-                DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+            DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
 
-                If AutoPadding Then
-                    Border = {CInt(SFMLFontSize), 5, CInt(-SFMLFontSize \ 2), 5}.ToList
-                End If
+            Dim textSize As New FloatRect()
+            textSize = DisplayText.GetLocalBounds
 
-                Select Case True
-                    Case TextAlign = Drawing.ContentAlignment.MiddleLeft
-                        DisplayText.Position = New Vector2f(Left + Border(0), (Top + Height / 2) - textSize.Height / 2)
-                    Case TextAlign = Drawing.ContentAlignment.MiddleCenter
-                        DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
-                    Case TextAlign = Drawing.ContentAlignment.MiddleRight
-                        DisplayText.Position = New Vector2f((Right - Border(2)) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
-                End Select
+            'If AutoPadding Then
+            '    Border = {CInt(SFMLFontSize), 5, CInt(-SFMLFontSize \ 2), 5}.ToList
+            'End If
 
-                w.Draw(DisplayText)
-            End If
+
+            'Select Case True
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleLeft
+            '        DisplayText.Position = New Vector2f(Left, (Top + Height / 2) - textSize.Height / 2)
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleCenter
+            '        DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
+            '    Case TextAlign = Drawing.ContentAlignment.MiddleRight
+            '        DisplayText.Position = New Vector2f((Right) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
+            'End Select
+
+            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetLocalBounds, Bounds, TextOffset)
+
+            w.Draw(DisplayText)
+        End If
     End Sub
 End Class

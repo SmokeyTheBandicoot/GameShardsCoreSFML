@@ -13,7 +13,17 @@ Public Class SFMLLabel
     Private _ColorToggled As New Color(128, 128, 128, 0)
     Private _DisplayText As New Text()
     Private _SFMLFont As Font
-    Private _SFMLFontSize As Single
+    Private _SFMLFontSize As Single = 0
+    Private _TextOffset As Vector2f = New Vector2f(0, -SFMLFontSize / 2)
+
+    Public Property TextOffset As Vector2f
+        Get
+            Return _TextOffset
+        End Get
+        Set(value As Vector2f)
+            _TextOffset = value
+        End Set
+    End Property
 
     Public Property Toggleable() As Boolean
         Get
@@ -85,14 +95,7 @@ Public Class SFMLLabel
             End If
 
 
-            Select Case True
-                Case TextAlign = Drawing.ContentAlignment.MiddleLeft
-                    DisplayText.Position = New Vector2f(Left, (Top + Height / 2) - textSize.Height / 2)
-                Case TextAlign = Drawing.ContentAlignment.MiddleCenter
-                    DisplayText.Position = New Vector2f((Left + Width / 2) - textSize.Width / 2, (Top + Height / 2) - textSize.Height / 2)
-                Case TextAlign = Drawing.ContentAlignment.MiddleRight
-                    DisplayText.Position = New Vector2f(Right - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
-            End Select
+            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetLocalBounds, Bounds, TextOffset)
 
 
             w.Draw(DisplayText)

@@ -81,6 +81,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common.vb" />
     <Compile Include="GUI.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -98,6 +99,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SFMLButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SFMLCheckbox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLKeyboard.vb">
