@@ -5,8 +5,6 @@ Imports SFML.System
 Public Class SFMLLabel
     Inherits Label
 
-    Dim ut As New Utils
-
     Public Shadows Autosize As Boolean = False
     Private _Toggleable As Boolean = False
     Private _IsToggled As Boolean = False
@@ -83,19 +81,19 @@ Public Class SFMLLabel
 
         If Visible Then
 
-            Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, ut.InverseConvertFont(SFMLFont, SFMLFontSize))
-            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+            Dim textSize As Drawing.Size = TextRenderer.MeasureText(Text, Utils.InverseConvertFont(SFMLFont, CInt(SFMLFontSize)))
+            DisplayText = New Text(Text, SFMLFont, CUInt(_SFMLFontSize))
 
             If Toggleable Then
                 If IsToggled Then
                     DisplayText.Color = ColorToggled
                 Else
-                    DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+                    DisplayText.Color = New Color(Utils.ConvertColor(ForeColor))
                 End If
             End If
 
 
-            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetLocalBounds, Bounds, TextOffset)
+            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
 
 
             w.Draw(DisplayText)

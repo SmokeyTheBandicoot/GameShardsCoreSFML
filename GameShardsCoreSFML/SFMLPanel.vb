@@ -5,8 +5,6 @@ Imports SFML.System
 Public Class SFMLPanel
     Inherits Panel
 
-    Dim ut As New Utils
-
     Private _SpriteNormal As New Sprite
 
     Public Property SpriteNormal() As Sprite
@@ -17,9 +15,6 @@ Public Class SFMLPanel
             _SpriteNormal = value
         End Set
     End Property
-
-
-
 
     Public Sub Draw(ByRef w As RenderWindow)
         If Visible Then

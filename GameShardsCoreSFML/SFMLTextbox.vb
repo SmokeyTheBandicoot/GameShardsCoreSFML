@@ -5,9 +5,8 @@ Imports GameShardsCore.Base.Geometry
 Imports System.Drawing
 
 Public Class SFMLTextbox
-    Inherits Windows.Forms.TextBox
+    Inherits TextBox
 
-    Dim ut As New Utils
     Dim GGeom As New Geometry
     Dim r As New RectangleShape
 
@@ -15,11 +14,12 @@ Public Class SFMLTextbox
     Dim c() As Char = Text.ToCharArray
 
     'Properties
+    Private _OutlineTickness As Integer = -1
     Private _IsActive As Boolean = False
     Private _ColorReadonly As New SFML.Graphics.Color(196, 196, 196)
     Private _ColorDisabled As New SFML.Graphics.Color(128, 128, 128)
     Private _Backcolor As New SFML.Graphics.Color(255, 255, 255)
-    Private _BorderColor As New SFML.Graphics.Color(255, 0, 0)
+    Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _BorderColorFocused As New SFML.Graphics.Color(128, 128, 128)
     Private _DisplayText As New Text
     Private _SFMLFont As SFML.Graphics.Font
@@ -29,6 +29,14 @@ Public Class SFMLTextbox
     Private _BoundKeyboard As SFMLKeyboard
     Private _TextOffset As Vector2f = New Vector2f(0, 0)
 
+    Public Property OutlineTickness As Integer
+        Get
+            Return _OutlineTickness
+        End Get
+        Set(value As Integer)
+            _OutlineTickness = value
+        End Set
+    End Property
     Public Property TextOffset As Vector2f
         Get
             Return _TextOffset
@@ -120,7 +128,7 @@ Public Class SFMLTextbox
     End Property
 
     Sub SetActive(ByVal p As Drawing.Point)
-        If GGeom.CheckIfRectangleIntersectsPoint(ut.FloatRectToRect(r.GetGlobalBounds), p) OrElse GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) Then
+        If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
             IsActive = True
         Else
             IsActive = False
@@ -138,18 +146,20 @@ Public Class SFMLTextbox
                 Text = Text.Remove(MaxLength)
             End If
 
+            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+
             If Enabled Then
                 If IsActive Then
                     DisplayText.Color = ColorReadonly
                 Else
-                    DisplayText.Color = New SFML.Graphics.Color(ut.ConvertColor(ForeColor))
+                    DisplayText.Color = New SFML.Graphics.Color(Utils.ConvertColor(ForeColor))
                 End If
             Else
-                DisplayText.Color = New SFML.Graphics.Color(ut.ConvertColor(ForeColor))
+                DisplayText.Color = New SFML.Graphics.Color(Utils.ConvertColor(ForeColor))
             End If
 
 
-            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+
             'Dim textSize As New FloatRect()
             'textSize = 
 
@@ -167,14 +177,15 @@ Public Class SFMLTextbox
             'DisplayText.Position = New Vector2f(Location.X, Location.Y)
 
             r.FillColor = SFML.Graphics.Color.Transparent
-            r.OutlineThickness = 2
+            r.OutlineThickness = OutlineTickness
             If IsActive Then
                 r.OutlineColor = _BorderColorFocused
             Else
                 r.OutlineColor = _BorderColor
             End If
 
-            DisplayText.Position = Common.GetPosition(ContentAlignment.MiddleLeft, DisplayText.GetLocalBounds, New FloatRect(Left, Top, Width, Height), TextOffset)
+            'DisplayText.Position = Common.GetPositionHorizontal(TextAlign, DisplayText.GetLocalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
+            DisplayText.Position = Common.GetPosition(Common.ConvertHorizontalAlignToContentAlign(TextAlign), DisplayText.GetGlobalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, 0 + TextOffset.Y))
 
             Size = New Size(Size.Width, DisplayText.GetLocalBounds.Height + SFMLFontSize / 4)
 

@@ -5,9 +5,6 @@ Imports SFML.System
 Public Class SFMLButton
     Inherits Button
 
-    Dim ut As New Utils
-
-
     Private _Toggleable As Boolean = False
     Private _IsToggled As Boolean = False
     Private _ToggleChangesSprite As Boolean = False
@@ -276,8 +273,8 @@ Public Class SFMLButton
                 w.Draw(r)
             End If
 
-            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
-            DisplayText.Color = New Color(ut.ConvertColor(ForeColor))
+            DisplayText = New Text(Text, SFMLFont, CUInt(_SFMLFontSize))
+            DisplayText.Color = New Color(Utils.ConvertColor(ForeColor))
 
             Dim textSize As New FloatRect()
             textSize = DisplayText.GetLocalBounds
@@ -296,7 +293,7 @@ Public Class SFMLButton
             '        DisplayText.Position = New Vector2f((Right) - textSize.Width, (Top + Height / 2) - textSize.Height / 2)
             'End Select
 
-            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetLocalBounds, Bounds, TextOffset)
+            DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
 
             w.Draw(DisplayText)
         End If

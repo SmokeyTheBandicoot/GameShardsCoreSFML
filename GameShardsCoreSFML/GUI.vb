@@ -39,7 +39,9 @@ Public Class GUI
             ElseIf TypeOf Controls(x) Is SFMLTextbox Then
                 DirectCast(Controls(x), SFMLTextbox).draw(window)
             ElseIf TypeOf Controls(x) Is SFMLKeyboard Then
-                DirectCast(Controls(x), SFMLKeyboard).draw(window)
+                DirectCast(Controls(x), SFMLKeyboard).Draw(window)
+            ElseIf TypeOf Controls(x) Is SFMLCheckbox Then
+                DirectCast(Controls(x), SFMLCheckbox).Draw(window)
             End If
         Next
     End Sub

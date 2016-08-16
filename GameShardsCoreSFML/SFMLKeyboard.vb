@@ -292,14 +292,6 @@ Public Class SFMLKeyboard
             Return _KeyPadding
         End Get
         Set(ByVal value As Byte)
-            'For y = 0 To 4
-            '    For x = 0 To 14
-            '        Keys((y * 15 - 1) + x).Location = New Point(Location.X + CalculateKeySize.Width * x + x * value, Location.Y + CalculateKeySize.Height * y + y * value)
-            '    Next
-            'Next
-            'If value <> _KeyPadding Then
-            '    SetKeys(Ut.PointToVector2F(Me.Location), New Vector2f(Size.Width, Size.Height), value)
-            'End If
             _KeyPadding = value
         End Set
     End Property
@@ -325,6 +317,11 @@ Public Class SFMLKeyboard
         Next
     End Sub
 
+    ''' <summary>
+    ''' Checks for the keys and does its work. Remember to do this only if the bound textbox is active. (to set in the program code for each keyboard)
+    ''' </summary>
+    ''' <param name="p"></param>
+    ''' <param name="container"></param>
     Public Sub SetKeyPressed(ByVal p As Point, ByRef container As String)
         For x = 0 To Keys.Count - 1 'Keys.Count - 1
             If GGeom.CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
@@ -395,14 +392,14 @@ Public Class SFMLKeyboard
 
         'SFMLFont = New SFML.Graphics.Font(SFMLFont)
         If Visible AndAlso (Not BoundToTextbox) Then
-            Dim ft As New SFML.Graphics.Font(Ut.ConvertFont(Font))
+            Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
             For x = 0 To Keys.Count - 1
                 Dim r As New RectangleShape
                 Dim t As New Text(CurCharset(x), ft)
 
                 t.CharacterSize = Font.SizeInPoints
                 t.Position = New Vector2f(Keys(x).Location.X + 2, Keys(x).Location.Y + 2)
-                r.Size = Ut.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
+                r.Size = Utils.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
                 r.Position = New Vector2f(Keys(x).Location.X, Keys(x).Location.Y)
                 r.OutlineThickness = 1
 
@@ -430,14 +427,14 @@ Public Class SFMLKeyboard
 
     Public Sub DrawToBoundTextbox(ByVal w As RenderWindow)
         If Visible Then
-            Dim ft As New SFML.Graphics.Font(Ut.ConvertFont(Font))
+            Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
             For x = 0 To Keys.Count - 1
                 Dim r As New RectangleShape
                 Dim t As New Text(CurCharset(x), ft)
 
                 t.CharacterSize = Font.SizeInPoints
                 t.Position = New Vector2f(Keys(x).Location.X + 2, Keys(x).Location.Y + 2)
-                r.Size = Ut.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
+                r.Size = Utils.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
                 r.Position = New Vector2f(Keys(x).Location.X, Keys(x).Location.Y)
                 r.OutlineThickness = 1
 
