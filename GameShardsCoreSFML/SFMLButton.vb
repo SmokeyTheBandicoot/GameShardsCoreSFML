@@ -41,6 +41,16 @@ Public Class SFMLButton
     Private _ID As Long
     Private _IDStr As String
     Private _TextOffset As Vector2f = New Vector2f(0, -SFMLFontSize / 2)
+    Private _Z As Integer
+
+    Public Property Z As Integer Implements ISFMLControl.Z
+        Get
+            Return _Z
+        End Get
+        Set(value As Integer)
+            _Z = value
+        End Set
+    End Property
 
     Public Property TextOffset As Vector2f
         Get

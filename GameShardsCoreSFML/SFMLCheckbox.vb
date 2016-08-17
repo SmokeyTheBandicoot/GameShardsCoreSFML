@@ -14,7 +14,7 @@ Public Class SFMLCheckbox
     Private _OutlineTickness As Integer = -1
     Private _DisplayText As New Text
     Private _SFMLFont As SFML.Graphics.Font
-    Private _SFMLFontSize As Single
+    Private _SFMLFontSize As Single = 16
     Private _ID As Long
     Private _IDStr As String
     Private _TextOffset As Vector2f = New Vector2f(0, 0)
@@ -31,12 +31,22 @@ Public Class SFMLCheckbox
     Private _AutoScale As Boolean = True
     Private _SpriteNormalScale As New Vector2f(1, 1)
     Private _SpriteIndeterminateScale As New Vector2f(1, 1)
+    Private _Z As Integer
 
     'TO DO: Draw box on the right
 
     Private IsHovered As Boolean = False
 
     Dim r As RectangleShape
+
+    Public Property Z As Integer Implements ISFMLControl.Z
+        Get
+            Return _Z
+        End Get
+        Set(value As Integer)
+            _Z = value
+        End Set
+    End Property
 
     Public Property CycleIndeterminate As Boolean
         Get
@@ -283,7 +293,7 @@ Public Class SFMLCheckbox
 
             DisplayText.Position = New Vector2f(Location.X + BoxSize.Width + 3, Location.Y + BoxSize.Height / 2 - DisplayText.GetGlobalBounds.Height / 2) 'Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(r.Position.X + r.Size.X, r.Position.Y, DisplayText.GetGlobalBounds.Width, DisplayText.GetGlobalBounds.Height), New Vector2f(0 + TextOffset.X + BoxSize.Width+3, 0 + TextOffset.Y))
 
-            Size = New Drawing.Size(Size.Width + BoxSize.Width, DisplayText.GetLocalBounds.Height)
+            Size = New Size(Size.Width + BoxSize.Width, DisplayText.GetLocalBounds.Height)
 
             r.Size = New Vector2f(BoxSize.Width, BoxSize.Height)
             r.Position = New Vector2f(Location.X, Location.Y)

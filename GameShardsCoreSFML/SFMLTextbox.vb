@@ -25,11 +25,21 @@ Public Class SFMLTextbox
     Private _BorderColorFocused As New SFML.Graphics.Color(128, 128, 128)
     Private _DisplayText As New Text
     Private _SFMLFont As SFML.Graphics.Font
-    Private _SFMLFontSize As Single
+    Private _SFMLFontSize As Single = 16
     Private _ID As Long
     Private _IDStr As String
     Private _BoundKeyboard As SFMLKeyboard
     Private _TextOffset As Vector2f = New Vector2f(0, 0)
+    Private _Z As Integer
+
+    Public Property Z As Integer Implements ISFMLControl.Z
+        Get
+            Return _Z
+        End Get
+        Set(value As Integer)
+            _Z = value
+        End Set
+    End Property
 
     Public Property OutlineTickness As Integer
         Get

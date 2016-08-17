@@ -59,6 +59,11 @@ Public Class SFMLKeyboard
     Public Shared LettersOnlyExtUpperCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
     Public Shared UtilitiesOnly As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
 
+    'Events
+    'To do: create CharsetChangedEventArgs and KeyboardKeyPressedEventArgs
+    Public Event onCharsetChanged()
+    Public Event onKeyPressed()
+
     Public Enum KeyBoardUI As Byte
         ''' <summary>
         ''' All chars
@@ -298,6 +303,15 @@ Public Class SFMLKeyboard
         End Set
     End Property
 
+    Public Property Z As Integer Implements ISFMLControl.Z
+        Get
+            Throw New NotImplementedException()
+        End Get
+        Set(value As Integer)
+            Throw New NotImplementedException()
+        End Set
+    End Property
+
     Public Sub New(locat As Vector2f, size As Vector2f, fnt As SFML.Graphics.Font)
         SetKeys(locat, size, 0, fnt)
     End Sub
@@ -342,6 +356,9 @@ Public Class SFMLKeyboard
                     Case Else
                         container += Keys(x).Text
                 End Select
+
+                RaiseEvent onKeyPressed()
+
             End If
         Next
     End Sub
@@ -376,6 +393,7 @@ Public Class SFMLKeyboard
     End Sub
 
     Public Function SetCharset() As List(Of String)
+        RaiseEvent onCharsetChanged() '(New CharsetChangedEventArgs([List (Of String)] UI))
         Select Case UI
             Case KeyBoardUI.DefaultUI
                 If IsUpper Then
@@ -386,6 +404,7 @@ Public Class SFMLKeyboard
             Case Else
                 Return DefaultCharsUpperCase
         End Select
+
     End Function
 
     'Public Sub Draw(ByRef w As RenderWindow)
