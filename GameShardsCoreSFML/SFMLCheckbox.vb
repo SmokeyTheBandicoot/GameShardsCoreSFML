@@ -2,9 +2,12 @@
 Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
+Imports GameShardsCoreSFML
+Imports System.Drawing
 
 Public Class SFMLCheckbox
     Inherits CheckBox
+    Implements ISFMLControl
 
     Dim GGeom As New Geometry
 
@@ -18,10 +21,10 @@ Public Class SFMLCheckbox
 
     Private _CheckSpriteNormal As New Sprite
     Private _CheckSpriteUnchecked As New Sprite
-    Private _CheckColorNormal As New Color(64, 255, 64)
-    Private _CheckColorHover As New Color(64, 128, 64)
-    Private _BorderColorNormal As New Color(0, 0, 0)
-    Private _BorderColorHover As New Color(0, 0, 128)
+    Private _CheckColorNormal As New SFML.Graphics.Color(64, 255, 64)
+    Private _CheckColorHover As New SFML.Graphics.Color(64, 128, 64)
+    Private _BorderColorNormal As New SFML.Graphics.Color(0, 0, 0)
+    Private _BorderColorHover As New SFML.Graphics.Color(0, 0, 128)
 
     Private _CycleIndeterminate As Boolean = False
     Private _BoxSize As New Drawing.Size(15, 15)
@@ -91,20 +94,20 @@ Public Class SFMLCheckbox
         End Set
     End Property
 
-    Public Property BorderColornormal As Color
+    Public Property BorderColornormal As SFML.Graphics.Color
         Get
             Return _BorderColorNormal
         End Get
-        Set(value As Color)
+        Set(value As SFML.Graphics.Color)
             _BorderColorNormal = value
         End Set
     End Property
 
-    Public Property BorderColorHover As Color
+    Public Property BorderColorHover As SFML.Graphics.Color
         Get
             Return _BorderColorHover
         End Get
-        Set(value As Color)
+        Set(value As SFML.Graphics.Color)
             _BorderColorHover = value
         End Set
     End Property
@@ -137,20 +140,20 @@ Public Class SFMLCheckbox
         End Set
     End Property
 
-    Public Property CheckColorNormal As Color
+    Public Property CheckColorNormal As SFML.Graphics.Color
         Get
             Return _CheckColorNormal
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _CheckColorNormal = value
         End Set
     End Property
 
-    Public Property CheckColorHover As Color
+    Public Property CheckColorHover As SFML.Graphics.Color
         Get
             Return _CheckColorHover
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _CheckColorHover = value
         End Set
     End Property
@@ -246,9 +249,11 @@ Public Class SFMLCheckbox
         Else
             IsHovered = False
         End If
+
+        MyBase.OnMouseEnter(New EventArgs)
     End Sub
 
-    Public Sub Draw(ByRef w As RenderWindow)
+    Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
 
             r = New RectangleShape
@@ -258,12 +263,12 @@ Public Class SFMLCheckbox
 
             'DisplayText.Position = New Vector2f(Location.X, Location.Y)
 
-            r.FillColor = New Color(Utils.ConvertColor(BackColor))
+            r.FillColor = New SFML.Graphics.Color(Utils.ConvertColor(BackColor))
 
             If IsHovered Then
-                r.OutlineColor = New Color(BorderColorHover)
+                r.OutlineColor = New SFML.Graphics.Color(BorderColorHover)
             Else
-                r.OutlineColor = New Color(BorderColornormal)
+                r.OutlineColor = New SFML.Graphics.Color(BorderColornormal)
             End If
 
             r.OutlineThickness = OutlineTickness
@@ -298,6 +303,18 @@ Public Class SFMLCheckbox
             End Select
 
 
+        End If
+    End Sub
+
+    Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
+        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnMouseHover(New EventArgs)
+        End If
+    End Sub
+
+    Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
+        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnClick(New EventArgs)
         End If
     End Sub
 End Class

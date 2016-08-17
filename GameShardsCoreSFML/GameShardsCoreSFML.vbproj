@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Common.vb" />
     <Compile Include="GUI.vb" />
+    <Compile Include="ISFMLControl.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

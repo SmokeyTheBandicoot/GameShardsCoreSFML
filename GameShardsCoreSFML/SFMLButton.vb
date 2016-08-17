@@ -1,9 +1,22 @@
 ﻿Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
+Imports GameShardsCore.Base.Geometry
+Imports System.Drawing
+
+'Events to do:
+'Image Changed
+'MouseEnter
+'BackImage Changed
+'Right-click
+'MouseLeave
+'MouseHover
 
 Public Class SFMLButton
     Inherits Button
+    Implements ISFMLControl
+
+    Dim GGeom As New Geometry
 
     Private _Toggleable As Boolean = False
     Private _IsToggled As Boolean = False
@@ -11,16 +24,16 @@ Public Class SFMLButton
     Private _ToggleChangesColor As Boolean = True
     Private _SpriteNormal As New Sprite
     Private _SpriteToggled As New Sprite
-    Private _ColorNormal As New Color(255, 255, 255, 0)
-    Private _ColorToggled As New Color(128, 128, 128, 0)
-    Private _ColorDisabled As New Color(50, 50, 50, 0)
+    Private _ColorNormal As New SFML.Graphics.Color(255, 255, 255, 0)
+    Private _ColorToggled As New SFML.Graphics.Color(128, 128, 128, 0)
+    Private _ColorDisabled As New SFML.Graphics.Color(50, 50, 50, 0)
     Private _DrawBorder As Boolean = False
-    Private _BorderColorNormal As New Color(0, 0, 0)
-    Private _BorderColorToggled As New Color(0, 0, 0)
-    Private _BorderColorDisabled As New Color(0, 0, 0)
+    Private _BorderColorNormal As New SFML.Graphics.Color(0, 0, 0)
+    Private _BorderColorToggled As New SFML.Graphics.Color(0, 0, 0)
+    Private _BorderColorDisabled As New SFML.Graphics.Color(0, 0, 0)
     Dim r As New RectangleShape
     Private _DisplayText As New Text()
-    Private _SFMLFont As Font
+    Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single
     'Private _TextOffset As Vector2f = New Vector2f(0, SFMLFontSize / 2)
     ''Private _Border As List(Of Integer) = {5, 5, 5, 5}.ToList
@@ -47,29 +60,29 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Property BorderColorNormal As Color
+    Public Property BorderColorNormal As SFML.Graphics.Color
         Get
             Return _BorderColorNormal
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _BorderColorNormal = value
         End Set
     End Property
 
-    Public Property BorderColorToggled As Color
+    Public Property BorderColorToggled As SFML.Graphics.Color
         Get
             Return _BorderColorToggled
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _BorderColorToggled = value
         End Set
     End Property
 
-    Public Property BorderColorDisabled As Color
+    Public Property BorderColorDisabled As SFML.Graphics.Color
         Get
             Return _BorderColorDisabled
         End Get
-        Set(ByVal value As Color)
+        Set(ByVal value As SFML.Graphics.Color)
             _BorderColorDisabled = value
         End Set
     End Property
@@ -155,29 +168,29 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Property ColorNormal() As Color
+    Public Property ColorNormal() As SFML.Graphics.Color
         Get
             Return _ColorNormal
         End Get
-        Set(value As Color)
+        Set(value As SFML.Graphics.Color)
             _ColorNormal = value
         End Set
     End Property
 
-    Public Property ColorToggled() As Color
+    Public Property ColorToggled() As SFML.Graphics.Color
         Get
             Return _ColorToggled
         End Get
-        Set(value As Color)
+        Set(value As SFML.Graphics.Color)
             _ColorToggled = value
         End Set
     End Property
 
-    Public Property ColorDisabled() As Color
+    Public Property ColorDisabled() As SFML.Graphics.Color
         Get
             Return _ColorDisabled
         End Get
-        Set(value As Color)
+        Set(value As SFML.Graphics.Color)
             _ColorDisabled = value
         End Set
     End Property
@@ -200,11 +213,11 @@ Public Class SFMLButton
     '    End Set
     'End Property
 
-    Public Property SFMLFont() As Font
+    Public Property SFMLFont() As SFML.Graphics.Font
         Get
             Return _SFMLFont
         End Get
-        Set(value As Font)
+        Set(value As SFML.Graphics.Font)
             _SFMLFont = value
         End Set
     End Property
@@ -218,11 +231,11 @@ Public Class SFMLButton
         End Set
     End Property
 
-    Public Function CalculateSizeFromText() As Drawing.Size
+    Public Function CalculateSizeFromText() As Size
         Return TextRenderer.MeasureText(Text, Font)
     End Function
 
-    Public Sub Draw(ByRef w As RenderWindow)
+    Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
 
             Bounds = New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height)
@@ -274,7 +287,7 @@ Public Class SFMLButton
             End If
 
             DisplayText = New Text(Text, SFMLFont, CUInt(_SFMLFontSize))
-            DisplayText.Color = New Color(Utils.ConvertColor(ForeColor))
+            DisplayText.Color = New SFML.Graphics.Color(Utils.ConvertColor(ForeColor))
 
             Dim textSize As New FloatRect()
             textSize = DisplayText.GetLocalBounds
@@ -296,6 +309,18 @@ Public Class SFMLButton
             DisplayText.Position = Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
 
             w.Draw(DisplayText)
+        End If
+    End Sub
+
+    Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
+        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnMouseHover(New EventArgs)
+        End If
+    End Sub
+
+    Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
+        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnClick(New EventArgs)
         End If
     End Sub
 End Class

@@ -3,18 +3,18 @@ Imports System.Windows.Forms
 
 Public Class GUI
 
-    Private _Controls As New List(Of Control)
+    Private _Controls As New List(Of ISFMLControl)
     Private _Sprites As New List(Of Sprite)
 
     ''' <summary>
     ''' Add here buttons, labels, pictureboxes
     ''' </summary>
     ''' <returns></returns>
-    Public Property Controls() As List(Of Control)
+    Public Property Controls() As List(Of ISFMLControl)
         Get
             Return _Controls
         End Get
-        Set(value As List(Of Control))
+        Set(value As List(Of ISFMLControl))
             _Controls = value
         End Set
     End Property
@@ -34,16 +34,18 @@ Public Class GUI
 
     Public Sub Draw(ByRef window As RenderWindow)
         For x = 0 To Controls.Count - 1
-            If TypeOf Controls(x) Is SFMLButton Then
-                DirectCast(Controls(x), SFMLButton).Draw(window)
-            ElseIf TypeOf Controls(x) Is SFMLTextbox Then
-                DirectCast(Controls(x), SFMLTextbox).draw(window)
-            ElseIf TypeOf Controls(x) Is SFMLKeyboard Then
-                DirectCast(Controls(x), SFMLKeyboard).Draw(window)
-            ElseIf TypeOf Controls(x) Is SFMLCheckbox Then
-                DirectCast(Controls(x), SFMLCheckbox).Draw(window)
-            End If
+            Controls(x).Draw(window)
         Next
+        '    If TypeOf Controls(x) Is SFMLButton Then
+        '        DirectCast(Controls(x), SFMLButton).Draw(window)
+        '    ElseIf TypeOf Controls(x) Is SFMLTextbox Then
+        '        DirectCast(Controls(x), SFMLTextbox).draw(window)
+        '    ElseIf TypeOf Controls(x) Is SFMLKeyboard Then
+        '        DirectCast(Controls(x), SFMLKeyboard).Draw(window)
+        '    ElseIf TypeOf Controls(x) Is SFMLCheckbox Then
+        '        DirectCast(Controls(x), SFMLCheckbox).Draw(window)
+        '    End If
+        'Next
     End Sub
 End Class
 

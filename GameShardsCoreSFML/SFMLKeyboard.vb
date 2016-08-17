@@ -3,9 +3,11 @@ Imports System.Drawing
 Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
+Imports GameShardsCoreSFML
 
 Public Class SFMLKeyboard
     Inherits Panel
+    Implements ISFMLControl
 
     Private Ut As New Utils
     Dim GGeom As New Geometry
@@ -386,7 +388,81 @@ Public Class SFMLKeyboard
         End Select
     End Function
 
-    Public Sub Draw(ByRef w As RenderWindow)
+    'Public Sub Draw(ByRef w As RenderWindow)
+    '    'Update Bounds
+    '    Bounds = New Rectangle(Location.X, Location.Y, SizeWH.Width, SizeWH.Height)
+
+    '    'SFMLFont = New SFML.Graphics.Font(SFMLFont)
+    '    If Visible AndAlso (Not BoundToTextbox) Then
+    '        Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
+    '        For x = 0 To Keys.Count - 1
+    '            Dim r As New RectangleShape
+    '            Dim t As New Text(CurCharset(x), ft)
+
+    '            t.CharacterSize = Font.SizeInPoints
+    '            t.Position = New Vector2f(Keys(x).Location.X + 2, Keys(x).Location.Y + 2)
+    '            r.Size = Utils.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
+    '            r.Position = New Vector2f(Keys(x).Location.X, Keys(x).Location.Y)
+    '            r.OutlineThickness = 1
+
+    '            If Enabled Then
+    '                If Keys(x).IsToggled Then
+    '                    r.FillColor = ColorToggled
+    '                    r.OutlineColor = BorderColorToggled
+    '                    t.Color = TextColorToggled
+    '                Else
+    '                    r.FillColor = ColorNormal
+    '                    r.OutlineColor = BorderColorNormal
+    '                    t.Color = TextColorNormal
+    '                End If
+    '            Else
+    '                r.FillColor = ColorDisabled
+    '                r.OutlineColor = BorderColorDisabled
+    '                t.Color = TextColorDisabled
+    '            End If
+
+    '            w.Draw(r)
+    '            w.Draw(t)
+    '        Next
+    '    End If
+    'End Sub
+
+    Public Sub DrawToBoundTextbox(ByVal w As RenderWindow)
+        If Visible Then
+            Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
+            For x = 0 To Keys.Count - 1
+                Dim r As New RectangleShape
+                Dim t As New Text(CurCharset(x), ft)
+
+                t.CharacterSize = Font.SizeInPoints
+                t.Position = New Vector2f(Keys(x).Location.X + 2, Keys(x).Location.Y + 2)
+                r.Size = Utils.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
+                r.Position = New Vector2f(Keys(x).Location.X, Keys(x).Location.Y)
+                r.OutlineThickness = 1
+
+                If Enabled Then
+                    If Keys(x).IsToggled Then
+                        r.FillColor = ColorToggled
+                        r.OutlineColor = BorderColorToggled
+                        t.Color = TextColorToggled
+                    Else
+                        r.FillColor = ColorNormal
+                        r.OutlineColor = BorderColorNormal
+                        t.Color = TextColorNormal
+                    End If
+                Else
+                    r.FillColor = ColorDisabled
+                    r.OutlineColor = BorderColorDisabled
+                    t.Color = TextColorDisabled
+                End If
+
+                w.Draw(r)
+                w.Draw(t)
+            Next
+        End If
+    End Sub
+
+    Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         'Update Bounds
         Bounds = New Rectangle(Location.X, Location.Y, SizeWH.Width, SizeWH.Height)
 
@@ -425,38 +501,15 @@ Public Class SFMLKeyboard
         End If
     End Sub
 
-    Public Sub DrawToBoundTextbox(ByVal w As RenderWindow)
-        If Visible Then
-            Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
-            For x = 0 To Keys.Count - 1
-                Dim r As New RectangleShape
-                Dim t As New Text(CurCharset(x), ft)
+    Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
+        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnMouseHover(New EventArgs)
+        End If
+    End Sub
 
-                t.CharacterSize = Font.SizeInPoints
-                t.Position = New Vector2f(Keys(x).Location.X + 2, Keys(x).Location.Y + 2)
-                r.Size = Utils.PointToVector2F(New Point(Keys(x).Size.Width, Keys(x).Size.Height))
-                r.Position = New Vector2f(Keys(x).Location.X, Keys(x).Location.Y)
-                r.OutlineThickness = 1
-
-                If Enabled Then
-                    If Keys(x).IsToggled Then
-                        r.FillColor = ColorToggled
-                        r.OutlineColor = BorderColorToggled
-                        t.Color = TextColorToggled
-                    Else
-                        r.FillColor = ColorNormal
-                        r.OutlineColor = BorderColorNormal
-                        t.Color = TextColorNormal
-                    End If
-                Else
-                    r.FillColor = ColorDisabled
-                    r.OutlineColor = BorderColorDisabled
-                    t.Color = TextColorDisabled
-                End If
-
-                w.Draw(r)
-                w.Draw(t)
-            Next
+    Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
+        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+            MyBase.OnClick(New EventArgs)
         End If
     End Sub
 End Class
