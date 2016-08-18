@@ -122,6 +122,9 @@
     <Compile Include="SFMLPanel.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLProgressBar.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLTextbox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -146,6 +149,20 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\csfml-audio-2.dll" />
+    <Content Include="bin\Debug\csfml-graphics-2.dll" />
+    <Content Include="bin\Debug\csfml-network-2.dll" />
+    <Content Include="bin\Debug\csfml-system-2.dll" />
+    <Content Include="bin\Debug\csfml-window-2.dll" />
+    <Content Include="bin\Debug\GameShardsCoreBETA.dll" />
+    <Content Include="bin\Debug\libsndfile-1.dll" />
+    <Content Include="bin\Debug\OpenTK.Compatibility.dll" />
+    <Content Include="bin\Debug\OpenTK.dll" />
+    <Content Include="bin\Debug\sfmlnet-graphics-2.dll" />
+    <Content Include="bin\Debug\sfmlnet-system-2.dll" />
+    <Content Include="bin\Debug\sfmlnet-window-2.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

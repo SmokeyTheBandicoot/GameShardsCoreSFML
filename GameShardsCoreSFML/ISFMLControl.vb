@@ -4,10 +4,8 @@ Imports SFML.Window
 Imports System.Drawing
 
 Public Interface ISFMLControl
-    Sub Draw(ByRef w As renderwindow)
+    Sub Draw(ByRef w As RenderWindow)
     Sub CheckHover(ByVal p As point)
     Sub CheckClick(ByVal p As Point)
     Property Z As Integer
-
-
 End Interface
