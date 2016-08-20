@@ -188,7 +188,7 @@ Public Class SFMLGroupbox
             control = New RectangleShape
             box = New RectangleShape
 
-            t = New Text(Text, SFMLFont, _SFMLFontSize)
+            t = New Text(Text, SFMLFont, SFMLFontSize)
             t.Color = New SFML.Graphics.Color(Forecolor)
 
             'DisplayText.Position = New Vector2f(Location.X, Location.Y)
@@ -208,17 +208,17 @@ Public Class SFMLGroupbox
                 box.OutlineColor = BoxColorDisabled
             End If
 
-            box.FillColor = BoxColor
+            'box.FillColor = BoxColor
 
             t.Position = New Vector2f(Location.X + 16, Location.Y) 'Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(r.Position.X + r.Size.X, r.Position.Y, DisplayText.GetGlobalBounds.Width, DisplayText.GetGlobalBounds.Height), New Vector2f(0 + TextOffset.X + BoxSize.Width+3, 0 + TextOffset.Y))
 
             'Size = New Size(Size.Width, Size.Height)
 
-            control.Size = New Vector2f(Size.Width, Size.Height)
-            control.Position = New Vector2f(Location.X, Location.Y)
-
             box.Size = New Vector2f(t.GetGlobalBounds.Width + 4, t.GetGlobalBounds.Height + 4)
             box.Position = New Vector2f(Location.X + 14, Location.Y - 2)
+
+            control.Size = New Vector2f(Size.Width, Size.Height - box.Size.Y / 2)
+            control.Position = New Vector2f(Location.X, Location.Y + box.Size.Y / 2)
 
             w.Draw(control)
             w.Draw(box)

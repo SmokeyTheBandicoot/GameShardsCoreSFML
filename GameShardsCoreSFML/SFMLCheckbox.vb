@@ -21,9 +21,9 @@ Public Class SFMLCheckbox
 
     Private _CheckSpriteNormal As New Sprite
     Private _CheckSpriteUnchecked As New Sprite
-    Private _CheckColorNormal As New SFML.Graphics.Color(64, 255, 64)
+    Private _CheckColorNormal As New SFML.Graphics.Color(255, 255, 255, 128)
     Private _CheckColorHover As New SFML.Graphics.Color(64, 128, 64)
-    Private _BorderColorNormal As New SFML.Graphics.Color(0, 0, 0)
+    Private _BorderColorNormal As New SFML.Graphics.Color(128, 0, 0)
     Private _BorderColorHover As New SFML.Graphics.Color(0, 0, 128)
 
     Private _CycleIndeterminate As Boolean = False
@@ -235,8 +235,8 @@ Public Class SFMLCheckbox
         'Checked --> Unchecked --> Indeterminate
         'MsgBox("Changing...")
         'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(r.GetGlobalBounds.Left, r.GetGlobalBounds.Top, r.GetGlobalBounds.Width, r.GetGlobalBounds.Height), p) Then
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, BoxSize.Width, BoxSize.Height), p) Then
-            If CheckState = CheckState.Checked Then
+        'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, BoxSize.Width, BoxSize.Height), p) Then
+        If CheckState = CheckState.Checked Then
                 CheckState = CheckState.Unchecked
             ElseIf CheckState = CheckState.Unchecked Then
                 If CycleIndeterminate Then
@@ -247,10 +247,10 @@ Public Class SFMLCheckbox
             Else
                 CheckState = CheckState.Checked
             End If
-            'MsgBox("changed to " + CheckState.ToString)
+        'MsgBox("changed to " + CheckState.ToString)
 
-            MyBase.OnCheckStateChanged(New EventArgs)
-        End If
+        'MyBase.OnCheckStateChanged(New EventArgs)
+        'End If
     End Sub
 
     Public Sub CheckHover(ByVal p As Drawing.Point)
@@ -323,8 +323,9 @@ Public Class SFMLCheckbox
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
-            MyBase.OnClick(New EventArgs)
+        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then 'Or GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(r.Position.X, r.Position.Y, r.Size.X, r.Size.Y), p) Then
+            ChangeCheckedState(p)
+            'MyBase.OnClick(New EventArgs)
         End If
     End Sub
 End Class

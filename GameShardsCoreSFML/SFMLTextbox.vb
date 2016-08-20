@@ -16,6 +16,7 @@ Public Class SFMLTextbox
     Dim c() As Char = Text.ToCharArray
 
     'Properties
+
     Private _OutlineTickness As Integer = -1
     Private _IsActive As Boolean = False
     Private _ColorReadonly As New SFML.Graphics.Color(196, 196, 196)
@@ -26,12 +27,21 @@ Public Class SFMLTextbox
     Private _DisplayText As New Text
     Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single = 16
+    Private _MinSize As New Size(3, SFMLFontSize)
     Private _ID As Long
     Private _IDStr As String
     Private _BoundKeyboard As SFMLKeyboard
-    Private _TextOffset As Vector2f = New Vector2f(0, 0)
+    Private _TextOffset As Vector2f = New Vector2f(0, -SFMLFontSize / 4)
     Private _Z As Integer
 
+    Public Property MinSize As Size
+        Get
+            Return _MinSize
+        End Get
+        Set(value As Size)
+            _MinSize = value
+        End Set
+    End Property
     Public Property Z As Integer Implements ISFMLControl.Z
         Get
             Return _Z
@@ -117,6 +127,7 @@ Public Class SFMLTextbox
             Return _SFMLFontSize
         End Get
         Set(ByVal value As Single)
+            TextOffset = New Vector2f(0, -value / 4)
             _SFMLFontSize = value
         End Set
     End Property
@@ -139,6 +150,10 @@ Public Class SFMLTextbox
         End Set
     End Property
 
+    Public Sub New()
+        Multiline = True
+    End Sub
+
     Sub SetActive(ByVal p As Drawing.Point)
         If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
             IsActive = True
@@ -149,6 +164,8 @@ Public Class SFMLTextbox
 
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
+
+            Multiline = True
 
             r = New RectangleShape
 
@@ -169,6 +186,9 @@ Public Class SFMLTextbox
             Else
                 DisplayText.Color = New SFML.Graphics.Color(Utils.ConvertColor(ForeColor))
             End If
+
+            DisplayText.Font = SFMLFont
+            DisplayText.CharacterSize = SFMLFontSize
 
 
 
@@ -199,9 +219,24 @@ Public Class SFMLTextbox
             'DisplayText.Position = Common.GetPositionHorizontal(TextAlign, DisplayText.GetLocalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
             DisplayText.Position = Common.GetPosition(Common.ConvertHorizontalAlignToContentAlign(TextAlign), DisplayText.GetGlobalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, 0 + TextOffset.Y))
 
-            Size = New Size(Size.Width, DisplayText.GetLocalBounds.Height + SFMLFontSize / 4)
+            If DisplayText.GetGlobalBounds.Height < MinSize.Height Then
+                If AutoSize Then
+                    Size = New Size(DisplayText.GetGlobalBounds.Width + 4, MinSize.Height)
+                Else
+                    Size = New Size(Size.Width, MinSize.Height)
+                End If
 
-            r.Size = New Vector2f(Size.Width, DisplayText.GetLocalBounds.Height + SFMLFontSize / 4)
+            Else
+                If AutoSize Then
+                    Size = New Size(DisplayText.GetGlobalBounds.Width + 4, DisplayText.GetGlobalBounds.Height)
+                Else
+                    Size = New Size(Size.Width, DisplayText.GetGlobalBounds.Height) '+ SFMLFontSize / 4)
+                End If
+
+            End If
+
+
+            r.Size = New Vector2f(Size.Width, Size.Height)
             r.Position = New Vector2f(Location.X, Location.Y)
 
             w.Draw(r)
