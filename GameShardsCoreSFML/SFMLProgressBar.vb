@@ -99,6 +99,18 @@ Public Class SFMLProgressBar
         End Set
     End Property
 
+    Private ReadOnly Property ISFMLControl_size As Size Implements ISFMLControl.size
+        Get
+            Return New Size(Size.Width, Size.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property ISFMLControl_location As Point Implements ISFMLControl.location
+        Get
+            Return New Point(Location.X, Location.Y)
+        End Get
+    End Property
+
     Public Sub New()
         Border.OutlineThickness = -1
         'Content.OutlineThickness = -1

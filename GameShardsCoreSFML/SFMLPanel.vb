@@ -97,6 +97,18 @@ Public Class SFMLPanel
         End Set
     End Property
 
+    Private ReadOnly Property ISFMLControl_size As Size Implements ISFMLControl.size
+        Get
+            Return New Size(Size.Width, Size.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property ISFMLControl_location As Point Implements ISFMLControl.location
+        Get
+            Return New Point(Location.X, Location.Y)
+        End Get
+    End Property
+
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
         If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)

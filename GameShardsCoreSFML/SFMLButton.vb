@@ -3,6 +3,7 @@ Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
 Imports System.Drawing
+Imports GameShardsCoreSFML
 
 'Events to do:
 'Image Changed
@@ -239,6 +240,18 @@ Public Class SFMLButton
         Set(value As Single)
             _SFMLFontSize = value
         End Set
+    End Property
+
+    Private ReadOnly Property ISFMLControl_size As Size Implements ISFMLControl.size
+        Get
+            Return New Size(Size.Width, Size.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property ISFMLControl_location As Point Implements ISFMLControl.location
+        Get
+            Return New Point(Location.X, Location.Y)
+        End Get
     End Property
 
     Public Function CalculateSizeFromText() As Size

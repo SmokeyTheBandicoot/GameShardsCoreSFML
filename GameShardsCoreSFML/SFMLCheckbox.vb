@@ -25,6 +25,7 @@ Public Class SFMLCheckbox
     Private _CheckColorHover As New SFML.Graphics.Color(64, 128, 64)
     Private _BorderColorNormal As New SFML.Graphics.Color(128, 0, 0)
     Private _BorderColorHover As New SFML.Graphics.Color(0, 0, 128)
+    Private _Autosize As Boolean
 
     Private _CycleIndeterminate As Boolean = False
     Private _BoxSize As New Drawing.Size(15, 15)
@@ -231,6 +232,22 @@ Public Class SFMLCheckbox
         End Set
     End Property
 
+    Private ReadOnly Property ISFMLControl_size As Size Implements ISFMLControl.size
+        Get
+            Return New Size(Size.Width, Size.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property ISFMLControl_location As Point Implements ISFMLControl.location
+        Get
+            Return New Point(Location.X, Location.Y)
+        End Get
+    End Property
+
+    Public Sub New()
+        AutoSize = True
+    End Sub
+
     Public Sub ChangeCheckedState(ByVal p As Drawing.Point)
         'Checked --> Unchecked --> Indeterminate
         'MsgBox("Changing...")
@@ -254,7 +271,7 @@ Public Class SFMLCheckbox
     End Sub
 
     Public Sub CheckHover(ByVal p As Drawing.Point)
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, BoxSize.Width, BoxSize.Height), p) Then
+        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
             IsHovered = True
         Else
             IsHovered = False
@@ -268,7 +285,7 @@ Public Class SFMLCheckbox
 
             r = New RectangleShape
 
-            DisplayText = New Text(Text, SFMLFont, _SFMLFontSize)
+            DisplayText = New Text(Text, SFMLFont, SFMLFontSize)
             DisplayText.Color = New SFML.Graphics.Color(Utils.ConvertColor(ForeColor))
 
             'DisplayText.Position = New Vector2f(Location.X, Location.Y)
@@ -291,12 +308,24 @@ Public Class SFMLCheckbox
                 CheckSpriteUnchecked.Color = CheckColorNormal
             End If
 
-            DisplayText.Position = New Vector2f(Location.X + BoxSize.Width + 3, Location.Y + BoxSize.Height / 2 - DisplayText.GetGlobalBounds.Height / 2) 'Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(r.Position.X + r.Size.X, r.Position.Y, DisplayText.GetGlobalBounds.Width, DisplayText.GetGlobalBounds.Height), New Vector2f(0 + TextOffset.X + BoxSize.Width+3, 0 + TextOffset.Y))
+            DisplayText.Position = New Vector2f(Location.X + BoxSize.Width + 3, Location.Y) '+ BoxSize.Height / 2 - DisplayText.GetGlobalBounds.Height / 2) 'Common.GetPosition(TextAlign, DisplayText.GetGlobalBounds, New FloatRect(r.Position.X + r.Size.X, r.Position.Y, DisplayText.GetGlobalBounds.Width, DisplayText.GetGlobalBounds.Height), New Vector2f(0 + TextOffset.X + BoxSize.Width+3, 0 + TextOffset.Y))
 
-            Size = New Size(Size.Width + BoxSize.Width, DisplayText.GetLocalBounds.Height)
+            If AutoSize Then
+                Size = New Size(DisplayText.GetGlobalBounds.Width + BoxSize.Width + 4, DisplayText.GetGlobalBounds.Height)
+            Else
+                Size = New Size(Size.Width, DisplayText.GetGlobalBounds.Height) '+ SFMLFontSize / 4)
+            End If
 
             r.Size = New Vector2f(BoxSize.Width, BoxSize.Height)
             r.Position = New Vector2f(Location.X, Location.Y)
+
+            'Dim rr As New RectangleShape
+            'rr.OutlineColor = SFML.Graphics.Color.Black
+            'rr.FillColor = SFML.Graphics.Color.Transparent
+            'rr.OutlineThickness = -1
+            'rr.Size = New Vector2f(Size.Width + BoxSize.Width + 4, Size.Height)
+            'rr.Position = New Vector2f(Location.X, Location.Y)
+            'w.Draw(rr)
 
             w.Draw(r)
             w.Draw(DisplayText)
@@ -305,7 +334,7 @@ Public Class SFMLCheckbox
                 Case CheckState.Checked
                     CheckSpriteNormal.Position = New Vector2f(Location.X, Location.Y)
                     w.Draw(CheckSpriteNormal)
-                Case CheckState.Unchecked
+                Case CheckState.Indeterminate
                     CheckSpriteUnchecked.Position = New Vector2f(Location.X, Location.Y)
                     w.Draw(CheckSpriteUnchecked)
                 Case CheckState.Unchecked

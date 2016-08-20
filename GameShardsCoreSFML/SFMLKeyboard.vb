@@ -317,6 +317,18 @@ Public Class SFMLKeyboard
         End Set
     End Property
 
+    Private ReadOnly Property ISFMLControl_size As Size Implements ISFMLControl.size
+        Get
+            Return New Size(Size.Width, Size.Height)
+        End Get
+    End Property
+
+    Private ReadOnly Property ISFMLControl_location As Point Implements ISFMLControl.location
+        Get
+            Return New Point(Location.X, Location.Y)
+        End Get
+    End Property
+
     Public Sub New(locat As Vector2f, size As Vector2f, fnt As SFML.Graphics.Font)
         SetKeys(locat, size, 0, fnt)
     End Sub

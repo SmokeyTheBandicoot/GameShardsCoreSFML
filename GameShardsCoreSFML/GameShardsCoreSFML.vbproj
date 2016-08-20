@@ -128,6 +128,9 @@
     <Compile Include="SFMLProgressBar.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLRadioButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLTextbox.vb">
       <SubType>Component</SubType>
     </Compile>
