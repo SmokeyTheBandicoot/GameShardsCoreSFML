@@ -1,10 +1,8 @@
 ﻿Imports SFML.Graphics
-Imports SFML.Window
 Imports SFML.System
 Imports System.Drawing
 Imports GameShardsCore
 Imports System.Windows.Forms
-Imports GameShardsCoreSFML
 
 Public Class SFMLGroupbox
     Inherits GroupBox

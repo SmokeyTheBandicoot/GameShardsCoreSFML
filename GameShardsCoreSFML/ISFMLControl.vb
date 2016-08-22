@@ -1,6 +1,4 @@
 ﻿Imports SFML.Graphics
-Imports SFML.System
-Imports SFML.Window
 Imports System.Drawing
 
 Public Interface ISFMLControl

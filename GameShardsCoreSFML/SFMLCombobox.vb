@@ -1,7 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports SFML.System
-Imports GameShardsCoreSFML
 Imports SFML.Graphics
 Imports GameShardsCore.Base.Geometry
 Imports System.Math
@@ -13,7 +12,7 @@ Public Class SFMLCombobox
     Dim GGeom As New Geometry
 
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
-    Private _BackColor As New SFML.Graphics.Color(161, 215, 236)
+    Private _ContentBackColor As New SFML.Graphics.Color(161, 215, 236)
     Private _ColorTop As New SFML.Graphics.Color(161, 215, 236)
     Private _ColorBottom As New SFML.Graphics.Color(255, 255, 255)
     Private _SFMLFont As SFML.Graphics.Font
@@ -21,6 +20,7 @@ Public Class SFMLCombobox
     Private _IsActive As Boolean = False
     Dim Arrow As CircleShape
 
+    Private HoveredItem As Integer
     Private MaxFontSize As Integer
 
     Dim ItemWidth As New List(Of Integer)
@@ -49,10 +49,10 @@ Public Class SFMLCombobox
     End Property
     Public Property ContentBackColor() As SFML.Graphics.Color
         Get
-            Return _BackColor
+            Return _ContentBackColor
         End Get
         Set(value As SFML.Graphics.Color)
-            _BackColor = value
+            _ContentBackColor = value
         End Set
     End Property
     Public Property ColorTop() As SFML.Graphics.Color
@@ -162,9 +162,23 @@ Public Class SFMLCombobox
                             tr = ColorTop.A + x * Abs((ColorBottom.A - ColorTop.A) / Items.Count)
                         End If
 
-                        r.FillColor = New SFML.Graphics.Color(re, gr, bl, tr)
-                        r.OutlineColor = BorderColor
-                        r.OutlineThickness = -1
+
+
+                        If x = HoveredItem AndAlso (Not HoveredItem = -1) Then
+                            r.OutlineThickness = -2
+                            'r.FillColor = New SFML.Graphics.Color(re, gr, bl, tr)
+                            r.OutlineColor = BorderColor
+
+                            Dim rh As New RectangleShape(r)
+                            rh.FillColor = New SFML.Graphics.Color(r.FillColor.R, r.FillColor.G, r.FillColor.B, 128)
+                            w.Draw(rh)
+                            rh.Dispose()
+                        Else
+                            r.OutlineThickness = -1
+                            r.FillColor = New SFML.Graphics.Color(re, gr, bl, tr)
+                            r.OutlineColor = BorderColor
+                        End If
+
 
                         r.Position = New Vector2f(Location.X, Location.Y + MaxFontSize * (x + 1))
                         r.Size = New Vector2f(Size.Width, MaxFontSize)
@@ -217,7 +231,8 @@ Public Class SFMLCombobox
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
+        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
+            HoveredItem = (Ceiling((p.Y - Location.Y) / MaxFontSize) - 2)
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
@@ -240,6 +255,8 @@ Public Class SFMLCombobox
             MyBase.OnSelectedIndexChanged(New EventArgs)
             MyBase.OnSelectedItemChanged(New EventArgs)
             MyBase.OnClick(New EventArgs)
+        Else
+            IsActive = False
         End If
     End Sub
 End Class

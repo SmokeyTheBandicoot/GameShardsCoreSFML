@@ -1,5 +1,4 @@
 ﻿Imports SFML.Graphics
-Imports System.Windows.Forms
 
 Public Class GUI
 

@@ -1,6 +1,5 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
-Imports GameShardsCoreSFML
 Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry

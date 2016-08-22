@@ -3,7 +3,6 @@ Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
 Imports System.Drawing
-Imports GameShardsCoreSFML
 
 'Events to do:
 'Image Changed

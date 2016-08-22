@@ -3,7 +3,6 @@ Imports System.Drawing
 Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
-Imports GameShardsCoreSFML
 
 Public Class SFMLKeyboard
     Inherits Panel

@@ -1,9 +1,7 @@
-﻿Imports System.Windows.Forms
-Imports SFML.Graphics
+﻿Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
 Imports System.Drawing
-Imports GameShardsCoreSFML
 
 Public Class SFMLGrid
     Inherits SFMLPanel
