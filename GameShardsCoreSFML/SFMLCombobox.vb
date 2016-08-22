@@ -19,6 +19,7 @@ Public Class SFMLCombobox
     Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single = 16
     Private _IsActive As Boolean = False
+    Dim Arrow As CircleShape
 
     Private MaxFontSize As Integer
 
@@ -177,6 +178,25 @@ Public Class SFMLCombobox
                 Next
             End If
 
+            Arrow = New CircleShape(MaxFontSize * 0.45, 3)
+            'Arrow.Origin = New Vector2f(Arrow.Position.X + Arrow.Radius, Arrow.Position.Y + Arrow.Radius)
+
+            Arrow.Origin = New Vector2f(Arrow.Origin.X + Arrow.Radius, Arrow.Origin.Y + Arrow.Radius)
+            Arrow.Position = New Vector2f(Location.X + Size.Width - MaxFontSize * 0.05 - Arrow.Radius, Location.Y + MaxFontSize * 0.05 + Arrow.Radius)
+
+
+            Arrow.FillColor = SFML.Graphics.Color.Black
+            Arrow.OutlineThickness = 0
+
+
+            'Arrow.Position = New Vector2f(0, 0) 'Location.X + Size.Width - MaxFontSize * 0.05, Location.Y + MaxFontSize * 0.05)
+            Arrow.Rotation = 180 * IsActive
+
+            'Arrow.Rotation = Now.Millisecond * 360 / 1000
+            'If IsActive Then
+            '    Arrow.Rotation = 180
+            'End If
+
             Dim rr As New RectangleShape
             rr.FillColor = ContentBackColor
             rr.OutlineColor = BorderColor
@@ -191,8 +211,9 @@ Public Class SFMLCombobox
             Size = New Size(Size.Width, MaxFontSize * (Items.Count + 1))
 
             w.Draw(rr)
-                w.Draw(tt)
-            End If
+            w.Draw(Arrow)
+            w.Draw(tt)
+        End If
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover

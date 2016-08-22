@@ -254,30 +254,20 @@ Public Class SFMLCheckbox
         'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(r.GetGlobalBounds.Left, r.GetGlobalBounds.Top, r.GetGlobalBounds.Width, r.GetGlobalBounds.Height), p) Then
         'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, BoxSize.Width, BoxSize.Height), p) Then
         If CheckState = CheckState.Checked Then
-                CheckState = CheckState.Unchecked
-            ElseIf CheckState = CheckState.Unchecked Then
-                If CycleIndeterminate Then
-                    CheckState = CheckState.Indeterminate
-                Else
-                    CheckState = CheckState.Checked
-                End If
+            CheckState = CheckState.Unchecked
+        ElseIf CheckState = CheckState.Unchecked Then
+            If CycleIndeterminate Then
+                CheckState = CheckState.Indeterminate
             Else
                 CheckState = CheckState.Checked
             End If
+        Else
+            CheckState = CheckState.Checked
+        End If
         'MsgBox("changed to " + CheckState.ToString)
 
         'MyBase.OnCheckStateChanged(New EventArgs)
         'End If
-    End Sub
-
-    Public Sub CheckHover(ByVal p As Drawing.Point)
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
-            IsHovered = True
-        Else
-            IsHovered = False
-        End If
-
-        MyBase.OnMouseEnter(New EventArgs)
     End Sub
 
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
@@ -346,9 +336,13 @@ Public Class SFMLCheckbox
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
-            MyBase.OnMouseHover(New EventArgs)
+        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
+            IsHovered = True
+        Else
+            IsHovered = False
         End If
+
+        MyBase.OnMouseHover(New EventArgs)
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
