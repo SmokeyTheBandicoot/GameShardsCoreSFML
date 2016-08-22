@@ -110,6 +110,9 @@
     <Compile Include="SFMLCheckbox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLCombobox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLGrid.vb">
       <SubType>Component</SubType>
     </Compile>
