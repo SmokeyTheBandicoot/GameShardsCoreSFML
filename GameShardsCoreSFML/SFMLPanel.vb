@@ -3,6 +3,7 @@ Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
 Imports GameShardsCore.Base.Geometry
+Imports GameShardsCoreSFML
 
 Public Class SFMLPanel
     Inherits Panel
@@ -119,7 +120,9 @@ Public Class SFMLPanel
             MyBase.OnClick(New EventArgs)
         End If
     End Sub
-
+    Public Sub CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
+        MyBase.OnMouseUp(New MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0))
+    End Sub
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
 
@@ -137,12 +140,14 @@ Public Class SFMLPanel
 
             w.Draw(r)
 
-            If usesprite Then
+            If UseSprite Then
                 SpriteNormal.Scale = New Vector2f(Width / SpriteNormal.Texture.Size.X, Height / SpriteNormal.Texture.Size.Y)
                 SpriteNormal.Position = New Vector2f(Location.X, Location.Y)
                 w.Draw(SpriteNormal)
             End If
         End If
     End Sub
+
+
 End Class
 

@@ -137,6 +137,9 @@
     <Compile Include="SFMLTextbox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLToolTip.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLTrackbar.vb">
       <SubType>Component</SubType>
     </Compile>

@@ -192,6 +192,10 @@ Public Class SFMLGroupbox
         End If
     End Sub
 
+    Public Sub CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
+        MyBase.OnMouseUp(New MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0))
+    End Sub
+
     Public Sub Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
 

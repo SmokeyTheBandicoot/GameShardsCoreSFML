@@ -345,4 +345,8 @@ Public Class SFMLButton
             MyBase.OnClick(New EventArgs)
         End If
     End Sub
+
+    Public Sub CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
+        MyBase.OnMouseUp(New MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0))
+    End Sub
 End Class

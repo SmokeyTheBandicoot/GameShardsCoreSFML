@@ -3,6 +3,7 @@ Imports System.Windows.Forms
 Imports System.Drawing
 Imports GameShardsCore.Base.Geometry
 Imports SFML.System
+Imports GameShardsCoreSFML
 
 Public Class SFMLProgressBar
     Inherits ProgressBar
@@ -167,5 +168,9 @@ Public Class SFMLProgressBar
         If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnClick(New EventArgs)
         End If
+    End Sub
+
+    Public Sub CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
+        MyBase.OnMouseUp(New MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0))
     End Sub
 End Class
