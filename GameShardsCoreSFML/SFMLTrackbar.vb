@@ -2,6 +2,7 @@
 Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore.Base
 Imports System.Math
 Imports SFML.System
 Imports GameShardsCoreSFML
@@ -11,6 +12,7 @@ Public Class SFMLTrackbar
     Implements ISFMLControl
 
     Dim GGeom As New Geometry
+    Dim GMath As New Math.Operators
 
     Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single = 16
@@ -22,6 +24,8 @@ Public Class SFMLTrackbar
     Private _TickOffsetY As Integer = 5 'In Pixels
     Private _TickOffsetX As Integer = 5 'In Pixels
     Private _BarThickNess As Integer = 10
+    Private _DefaultValue As Integer = (Maximum - Minimum) / 2
+    Private _ShowPercent As Boolean = True
 
 
     'Private _ShowMin as Boolean
@@ -31,6 +35,15 @@ Public Class SFMLTrackbar
     Private IsClicking As Boolean = False
     Private PrevPoint As New Point
 
+    Dim rr As RectangleShape
+    Dim ll As RectangleShape
+    Dim rrrt As CircleShape
+    Dim lllt As CircleShape
+    Dim rrt As CircleShape
+    Dim llt As CircleShape
+    Dim rt As CircleShape
+    Dim lt As CircleShape
+
     Dim track As New RectangleShape
     Dim dot As New CircleShape
     Dim min As Text
@@ -38,6 +51,14 @@ Public Class SFMLTrackbar
     Dim val As Text
     'Dim tick As RectangleShape
 
+    Public Property ShowPercent As Boolean
+        Get
+            Return _ShowPercent
+        End Get
+        Set(value As Boolean)
+            _ShowPercent = value
+        End Set
+    End Property
     Public Property BarThickNess As Integer
         Get
             Return _BarThickNess
@@ -132,13 +153,14 @@ Public Class SFMLTrackbar
     Public ReadOnly Property ValuePercent As Single
         Get
             'Return (Maximum / 100) / (Value + Minimum)
-            Return ((Maximum - Minimum) / 100) * Value
+            Return (100 / (Maximum - Minimum) * Value) - (100 / (Maximum - Minimum) * Minimum)
         End Get
     End Property
 
     Public ReadOnly Property ValuePercentPixel As Single
         Get
-            Return (Size.Width / 100) * ((Maximum - Minimum) / 100) * Value
+            'Return (Size.Width / 100) * ((Maximum - Minimum) / 100) * Value
+            Return ((100 / (Maximum - Minimum) * Value) - (100 / (Maximum - Minimum) * Minimum)) * Size.Width / 100
         End Get
     End Property
 
@@ -165,16 +187,16 @@ Public Class SFMLTrackbar
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
         If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
-            If IsClicking Then
-                If PrevPoint = Nothing Then
-                    PrevPoint = p
-                Else
-                    If Orientation = Orientation.Horizontal Then
-                        Value += (PrevPoint.X - p.X) / ValuePercentPixel
-                    End If
+            'If IsClicking Then
+            '    If PrevPoint = Nothing Then
+            '        PrevPoint = p
+            '    Else
+            '        If Orientation = Orientation.Horizontal Then
+            '            Value += (PrevPoint.X - p.X) / ValuePercentPixel
+            '        End If
 
-                End If
-            End If
+            '    End If
+            'End If
 
             MyBase.OnMouseHover(New EventArgs)
         End If
@@ -182,13 +204,42 @@ Public Class SFMLTrackbar
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
         If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
-            IsClicking = True
+            'IsClicking = True
             MyBase.OnClick(New EventArgs)
+
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rt.getglobalbounds), p) Then
+            If Value + SmallChange > Maximum Then
+                Value = Maximum
+            Else
+                Value += SmallChange
+            End If
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrt.getglobalbounds), p) Then
+            If Value + LargeChange > Maximum Then
+                Value = Maximum
+            Else
+                Value += LargeChange
+            End If
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrrt.getglobalbounds), p) Then
+            Value = Maximum
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lt.getglobalbounds), p) Then
+            If Value - SmallChange < Minimum Then
+                Value = Minimum
+            Else
+                Value -= SmallChange
+            End If
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(llt.getglobalbounds), p) Then
+            If Value - LargeChange < Minimum Then
+                Value = Minimum
+            Else
+                Value -= LargeChange
+            End If
+        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lllt.getglobalbounds), p) Then
+            Value = Minimum
         End If
     End Sub
 
-    Public Sub CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
-        IsClicking = False
+    Public Sub ISFMLControl_CheckClickUp(p As Point) Implements ISFMLControl.CheckClickUp
+        'IsClicking = False
         MyBase.OnMouseUp(New MouseEventArgs(MouseButtons.Left, 1, p.X, p.Y, 0))
     End Sub
 
@@ -196,6 +247,87 @@ Public Class SFMLTrackbar
     Public Sub Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
             If Orientation = Orientation.Horizontal Then
+
+                'Draw all the left Buttons
+                'Declare New
+                ll = New RectangleShape
+
+                'First Button
+                ll.Size = New Vector2f(BarThickNess, BarThickNess)
+                ll.Position = New Vector2f(Location.X - 2 - BarThickNess, Location.Y)
+
+                'First Arrow
+                lt = New CircleShape(ll.Size.X / 2, 3)
+                lt.Origin = New Vector2f(lt.Origin.X + lt.Radius, lt.Origin.Y + lt.Radius)
+                lt.Position = New Vector2f(ll.Position.X + ll.Size.X / 2, ll.Position.Y + ll.Size.Y / 2)
+                lt.Rotation = -90
+                lt.FillColor = SFML.Graphics.Color.White
+                lt.OutlineColor = SFML.Graphics.Color.Black
+                lt.OutlineThickness = 1
+
+                'Second Button
+                ll.Position = New Vector2f(Location.X - 4 - 2 * BarThickNess, Location.Y)
+
+                'Second Arrow
+                llt = New CircleShape(ll.Size.X / 2, 3)
+                llt.Origin = New Vector2f(llt.Origin.X + llt.Radius, llt.Origin.Y + llt.Radius)
+                llt.Position = New Vector2f(ll.Position.X + ll.Size.X / 2, ll.Position.Y + ll.Size.Y / 2)
+                llt.Rotation = -90
+                llt.FillColor = New SFML.Graphics.Color(128, 128, 128)
+                llt.OutlineColor = SFML.Graphics.Color.Black
+                llt.OutlineThickness = 1
+
+                'Third Button
+                ll.Position = New Vector2f(Location.X - 6 - 3 * BarThickNess, Location.Y)
+
+                'Third Arrow
+                lllt = New CircleShape(ll.Size.X / 2, 3)
+                lllt.Origin = New Vector2f(lllt.Origin.X + lllt.Radius, lllt.Origin.Y + lllt.Radius)
+                lllt.Position = New Vector2f(ll.Position.X + ll.Size.X / 2, ll.Position.Y + ll.Size.Y / 2)
+                lllt.Rotation = -90
+                lllt.FillColor = SFML.Graphics.Color.Black
+                lllt.OutlineColor = SFML.Graphics.Color.Black
+                lllt.OutlineThickness = 1
+
+                'Draw all the Right Button
+                'Declare New
+                rr = New RectangleShape
+
+                'First button
+                rr.Size = New Vector2f(BarThickNess, BarThickNess)
+                rr.Position = New Vector2f(Location.X + Size.Width + 2, Location.Y)
+
+                rt = New CircleShape(rr.Size.X / 2, 3)
+                rt.Origin = New Vector2f(rt.Origin.X + rt.Radius, rt.Origin.Y + rt.Radius)
+                rt.Position = New Vector2f(rr.Position.X + rr.Size.X / 2, rr.Position.Y + rr.Size.Y / 2)
+                rt.Rotation = 90
+                rt.FillColor = SFML.Graphics.Color.White
+                rt.OutlineColor = SFML.Graphics.Color.Black
+                rt.OutlineThickness = 1
+
+                'Second Button
+                rr.Position = New Vector2f(Location.X + Size.Width + 4 + BarThickNess, Location.Y)
+
+                'Second Arrow
+                rrt = New CircleShape(rr.Size.X / 2, 3)
+                rrt.Origin = New Vector2f(rrt.Origin.X + rrt.Radius, rrt.Origin.Y + rrt.Radius)
+                rrt.Position = New Vector2f(rr.Position.X + rr.Size.X / 2, rr.Position.Y + rr.Size.Y / 2)
+                rrt.Rotation = 90
+                rrt.FillColor = New SFML.Graphics.Color(128, 128, 128)
+                rrt.OutlineColor = SFML.Graphics.Color.Black
+                rrt.OutlineThickness = 1
+
+                'Third Button
+                rr.Position = New Vector2f(Location.X + Size.Width + 6 + 2 * BarThickNess, Location.Y)
+
+                'Third Arrow
+                rrrt = New CircleShape(rr.Size.X / 2, 3)
+                rrrt.Origin = New Vector2f(rrrt.Origin.X + rrrt.Radius, rrrt.Origin.Y + rrrt.Radius)
+                rrrt.Position = New Vector2f(rr.Position.X + rr.Size.X / 2, rr.Position.Y + rr.Size.Y / 2)
+                rrrt.Rotation = 90
+                rrrt.FillColor = SFML.Graphics.Color.Black
+                rrrt.OutlineColor = SFML.Graphics.Color.Black
+                rrrt.OutlineThickness = 1
 
                 track = New RectangleShape
                 track.Position = New Vector2f(Location.X, Location.Y)
@@ -206,17 +338,38 @@ Public Class SFMLTrackbar
 
                 dot = New CircleShape((BarThickNess / 2) + 6, 4)
                 dot.Position = New Vector2f(Location.X + ValuePercentPixel - dot.Radius, Location.Y - (dot.Radius - BarThickNess / 2))
-                dot.FillColor = ContentBackColor
-                dot.OutlineColor = BorderColor
+                dot.FillColor = DotBackColor
+                dot.OutlineColor = DotBorderColor
                 dot.OutlineThickness = -1
 
-                min = New Text(ValuePercent, SFMLFont, SFMLFontSize)
+                min = New Text(Minimum, SFMLFont, SFMLFontSize)
                 min.Color = Utils.ConvertColor(ForeColor)
                 min.Position = New Vector2f(Location.X, Location.Y + BarThickNess + TickOffsetY + min.GetGlobalBounds.Height + 5)
 
-                w.Draw(track)
+                max = New Text(Maximum, SFMLFont, SFMLFontSize)
+                max.Color = Utils.ConvertColor(ForeColor)
+                max.Position = New Vector2f(Location.X + Size.Width - max.GetGlobalBounds.Width, Location.Y + BarThickNess + TickOffsetY + min.GetGlobalBounds.Height + 5)
+
+                If ShowPercent Then
+                    val = New Text(Value.ToString + " (" + Round(ValuePercent, 1).ToString + "%)", SFMLFont, SFMLFontSize)
+                Else
+                    val = New Text(Value.ToString, SFMLFont, SFMLFontSize)
+                End If
+
+                val.Color = Utils.ConvertColor(ForeColor)
+                val.Position = New Vector2f(Location.X + Size.Width / 2 - val.GetGlobalBounds.Width / 2, Location.Y + BarThickNess + TickOffsetY + min.GetGlobalBounds.Height + 5)
+
                 w.Draw(dot)
+                w.Draw(lt)
+                w.Draw(llt)
+                w.Draw(lllt)
+                w.Draw(rt)
+                w.Draw(rrt)
+                w.Draw(rrrt)
+                w.Draw(track)
                 w.Draw(min)
+                w.Draw(max)
+                w.Draw(val)
 
                 If TickStyle = TickStyle.Both Or TickStyle = TickStyle.BottomRight Then
                     For x = 0 To TickNumber - 1
@@ -229,8 +382,20 @@ Public Class SFMLTrackbar
 
                         w.Draw(tick)
                     Next
+                End If
 
-                ElseIf TickStyle = TickStyle.Both Or TickStyle = TickStyle.TopLeft Then
+                If TickStyle = TickStyle.Both Or TickStyle = TickStyle.TopLeft Then
+
+                    For x = 0 To TickNumber - 1
+                        Dim tick As New RectangleShape
+                        tick.Position = New Vector2f(Location.X + x * TickDistance, Location.Y - BarThickNess / 2 - TickOffsetY)
+                        tick.FillColor = BorderColor
+                        tick.OutlineThickness = -1
+                        tick.OutlineColor = BorderColor
+                        tick.Size = New Vector2f(1, 5)
+
+                        w.Draw(tick)
+                    Next
 
                 End If
 
@@ -238,10 +403,13 @@ Public Class SFMLTrackbar
 
                 If TickStyle = TickStyle.Both Or TickStyle.BottomRight Then
 
-                ElseIf TickStyle = TickStyle.Both Or TickStyle.TopLeft Then
+                End If
+
+                If TickStyle = TickStyle.Both Or TickStyle.TopLeft Then
 
                 End If
             End If
+
         End If
     End Sub
 End Class

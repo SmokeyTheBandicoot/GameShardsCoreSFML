@@ -291,6 +291,7 @@ Public Class SFMLButton
                     _SpriteToggled.Color = ColorDisabled
                     r.OutlineColor = _BorderColorDisabled
                 End If
+
                 If ToggleChangesSprite Then
                     If IsToggled Then
                         w.Draw(_SpriteToggled)

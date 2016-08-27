@@ -165,14 +165,6 @@ Public Class SFMLTextbox
         Multiline = True
     End Sub
 
-    Sub SetActive(ByVal p As Drawing.Point)
-        If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
-            IsActive = True
-        Else
-            IsActive = False
-        End If
-    End Sub
-
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Visible Then
 
@@ -267,8 +259,11 @@ Public Class SFMLTextbox
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
+            IsActive = True
             MyBase.OnClick(New EventArgs)
+        Else
+            IsActive = False
         End If
     End Sub
 

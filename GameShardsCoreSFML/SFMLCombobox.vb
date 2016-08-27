@@ -139,27 +139,27 @@ Public Class SFMLCombobox
                     If Not Items.Count = 0 Then
 
                         If ColorTop.R > ColorBottom.R Then
-                            re = ColorBottom.R + x * Abs((ColorTop.R - ColorBottom.R) / Items.Count)
+                            re = ColorBottom.R + x * Abs((ColorTop.R - ColorBottom.R) / (Items.Count - 1))
                         Else
-                            re = ColorTop.R + x * Abs((ColorBottom.R - ColorTop.R) / Items.Count)
+                            re = ColorTop.R + x * Abs((ColorBottom.R - ColorTop.R) / (Items.Count - 1))
                         End If
 
                         If ColorTop.G > ColorBottom.G Then
-                            gr = ColorBottom.G + x * Abs((ColorTop.G - ColorBottom.G) / Items.Count)
+                            gr = ColorBottom.G + x * Abs((ColorTop.G - ColorBottom.G) / (Items.Count - 1))
                         Else
-                            gr = ColorTop.G + x * Abs((ColorBottom.G - ColorTop.G) / Items.Count)
+                            gr = ColorTop.G + x * Abs((ColorBottom.G - ColorTop.G) / (Items.Count - 1))
                         End If
 
                         If ColorTop.B > ColorBottom.B Then
-                            bl = ColorBottom.B + x * Abs((ColorTop.B - ColorBottom.B) / Items.Count)
+                            bl = ColorBottom.B + x * Abs((ColorTop.B - ColorBottom.B) / (Items.Count - 1))
                         Else
-                            bl = ColorTop.B + x * Abs((ColorBottom.B - ColorTop.B) / Items.Count)
+                            bl = ColorTop.B + x * Abs((ColorBottom.B - ColorTop.B) / (Items.Count - 1))
                         End If
 
                         If ColorTop.A > ColorBottom.A Then
-                            tr = ColorBottom.A + x * Abs((ColorTop.A - ColorBottom.A) / Items.Count)
+                            tr = ColorBottom.A + x * Abs((ColorTop.A - ColorBottom.A) / (Items.Count - 1))
                         Else
-                            tr = ColorTop.A + x * Abs((ColorBottom.A - ColorTop.A) / Items.Count)
+                            tr = ColorTop.A + x * Abs((ColorBottom.A - ColorTop.A) / (Items.Count - 1))
                         End If
 
 
@@ -234,6 +234,8 @@ Public Class SFMLCombobox
         If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
             HoveredItem = (Ceiling((p.Y - Location.Y) / MaxFontSize) - 2)
             MyBase.OnMouseHover(New EventArgs)
+        Else
+            HoveredItem = -1
         End If
     End Sub
 
