@@ -119,6 +119,9 @@
     <Compile Include="SFMLGroupbox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SFMLHScrollbar.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SFMLKeyboard.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -132,6 +135,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLRadioButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SFMLVScrollbar.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SFMLSlider.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLTextbox.vb">
