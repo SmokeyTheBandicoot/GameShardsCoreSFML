@@ -3,7 +3,8 @@ Imports System.Drawing
 Imports GameShardsCoreSFML
 Imports SFML.Graphics
 Imports System.Windows.Forms
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports SFML.System
 
 Public Class SFMLHScrollbar
@@ -27,8 +28,6 @@ Public Class SFMLHScrollbar
     Dim DownArr As CircleShape
     Dim back As RectangleShape
     Dim dot As RectangleShape
-
-    Dim GGeom As New Geometry
 
     Public Property HoverMarginX As Integer
         Get
@@ -145,11 +144,11 @@ Public Class SFMLHScrollbar
     End Function
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)
         End If
 
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left - HoverMarginX, Top - HoverMarginY, Width + 2 * HoverMarginX, Height + 2 * HoverMarginY), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left - HoverMarginX, Top - HoverMarginY, Width + 2 * HoverMarginX, Height + 2 * HoverMarginY), p) Then
             If IsClicking Then
                 Value = GetValueFromClick(p)
             End If
@@ -157,13 +156,13 @@ Public Class SFMLHScrollbar
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
             IsClicking = True
             Value = GetValueFromClick(p)
             MyBase.OnClick(New EventArgs)
         End If
 
-        If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(UpSq.GetGlobalBounds), p) Then
+        If CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(UpSq.GetGlobalBounds), p) Then
             If My.Computer.Keyboard.ShiftKeyDown Then
                 If Value - LargeChange < Minimum Then
                     Value = Minimum
@@ -179,7 +178,7 @@ Public Class SFMLHScrollbar
             End If
 
 
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(DownSq.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(DownSq.GetGlobalBounds), p) Then
             If My.Computer.Keyboard.ShiftKeyDown Then
                 If Value + LargeChange > Maximum Then
                     Value = Maximum

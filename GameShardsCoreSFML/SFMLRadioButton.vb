@@ -1,14 +1,14 @@
 ﻿Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Drawing
 
 Public Class SFMLRadioButton
     Inherits RadioButton
     Implements ISFMLControl
 
-    Dim GGeom As New Geometry
 
     Private _OutlineTickness As Integer = -1
     Private _DisplayText As New Text
@@ -305,7 +305,7 @@ Public Class SFMLRadioButton
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
             IsHovered = True
             MyBase.OnMouseHover(New EventArgs)
         Else
@@ -314,7 +314,7 @@ Public Class SFMLRadioButton
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then 'Or GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(r.Position.X, r.Position.Y, r.Size.X, r.Size.Y), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then 'Or CheckIfRectangleIntersectsPoint(New Rectangle(r.Position.X, r.Position.Y, r.Size.X, r.Size.Y), p) Then
             ChangeRadioState()
         End If
     End Sub

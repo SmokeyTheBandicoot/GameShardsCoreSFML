@@ -1,9 +1,7 @@
-﻿Imports GameShardsCore.Base.Geometry
+﻿Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 
 Public NotInheritable Class ControlUtils
-
-    'Public members
-    Private Shared GGeom As New Geometry
 
     Public Class TextboxUtils
         Public Shared Sub UpdateTextboxes(ByRef GUI As GUI, ByVal T As String)
@@ -31,7 +29,7 @@ Public NotInheritable Class ControlUtils
 
             For x = 0 To (gui.Controls.Count - 1)
                 If TypeOf gui.Controls(x) Is SFMLRadioButton AndAlso DirectCast(gui.Controls(x), SFMLRadioButton).Group = group Then
-                    If GGeom.CheckIfRectangleIntersectsPoint(DirectCast(gui.Controls(x), SFMLRadioButton).Bounds, p) Then
+                    If CheckIfRectangleIntersectsPoint(DirectCast(gui.Controls(x), SFMLRadioButton).Bounds, p) Then
                         Dim r As New SFMLRadioButton
                         r = DirectCast(gui.Controls(x), SFMLRadioButton)
                         r.Checked = True

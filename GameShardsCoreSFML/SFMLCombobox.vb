@@ -2,14 +2,13 @@
 Imports System.Windows.Forms
 Imports SFML.System
 Imports SFML.Graphics
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Math
 
 Public Class SFMLCombobox
     Inherits ComboBox
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
 
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _ContentBackColor As New SFML.Graphics.Color(161, 215, 236)
@@ -231,7 +230,7 @@ Public Class SFMLCombobox
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
             HoveredItem = (Ceiling((p.Y - Location.Y) / MaxFontSize) - 2)
             MyBase.OnMouseHover(New EventArgs)
         Else
@@ -240,7 +239,7 @@ Public Class SFMLCombobox
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Location.X, Location.Y, Size.Width, Size.Height + Abs(IsActive * MaxFontSize * (Items.Count))), p) Then
             'If Not ((Abs(p.Y - Location.Y) - MaxFontSize) / MaxFontSize = -1) Then
             '    SelectedIndex = (Abs(p.Y - Location.Y) - MaxFontSize) / MaxFontSize
             '    SelectedItem = Items(SelectedIndex)

@@ -1,8 +1,8 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports SFML.Graphics
-Imports GameShardsCore.Base.Geometry
-Imports GameShardsCore.Base
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Math
 Imports SFML.System
 Imports GameShardsCoreSFML
@@ -10,9 +10,6 @@ Imports GameShardsCoreSFML
 Public Class SFMLTrackbar
     Inherits TrackBar
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
-    Dim GMath As New Math.Operators
 
     Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single = 16
@@ -194,7 +191,7 @@ Public Class SFMLTrackbar
     End Function
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
             'If IsClicking Then
             '    If PrevPoint = Nothing Then
             '        PrevPoint = p
@@ -213,40 +210,40 @@ Public Class SFMLTrackbar
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
             'Main Bar
 
             IsClicking = True
             Value = GetValueFromClick(p)
             MyBase.OnClick(New EventArgs)
 
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rt.GetGlobalBounds), p) Then
             If Value + SmallChange > Maximum Then
                 Value = Maximum
             Else
                 Value += SmallChange
             End If
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrt.GetGlobalBounds), p) Then
             If Value + LargeChange > Maximum Then
                 Value = Maximum
             Else
                 Value += LargeChange
             End If
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrrt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(rrrt.GetGlobalBounds), p) Then
             Value = Maximum
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lt.GetGlobalBounds), p) Then
             If Value - SmallChange < Minimum Then
                 Value = Minimum
             Else
                 Value -= SmallChange
             End If
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(llt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(llt.GetGlobalBounds), p) Then
             If Value - LargeChange < Minimum Then
                 Value = Minimum
             Else
                 Value -= LargeChange
             End If
-        ElseIf GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lllt.GetGlobalBounds), p) Then
+        ElseIf CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(lllt.GetGlobalBounds), p) Then
             Value = Minimum
         End If
     End Sub

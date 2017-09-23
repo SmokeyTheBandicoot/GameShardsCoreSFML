@@ -1,14 +1,14 @@
 ﻿Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Drawing
 
 Public Class SFMLTextbox
     Inherits TextBox
     Implements ISFMLControl
 
-    Dim GGeom As New Geometry
     Dim r As New RectangleShape
 
     'Used for max length
@@ -20,7 +20,6 @@ Public Class SFMLTextbox
     Private _IsActive As Boolean = False
     Private _ColorReadonly As New SFML.Graphics.Color(196, 196, 196)
     Private _ColorDisabled As New SFML.Graphics.Color(128, 128, 128)
-    Private _Backcolor As New SFML.Graphics.Color(255, 255, 255)
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _BorderColorFocused As New SFML.Graphics.Color(128, 128, 128)
     Private _DisplayText As New Text
@@ -41,6 +40,25 @@ Public Class SFMLTextbox
             _MinSize = value
         End Set
     End Property
+
+    Public Property BorderColor As SFML.Graphics.Color
+        Get
+            Return _BorderColor
+        End Get
+        Set(value As SFML.Graphics.Color)
+            _BorderColor = value
+        End Set
+    End Property
+
+    Public Property BorderColorFocused As SFML.Graphics.Color
+        Get
+            Return _BorderColorFocused
+        End Get
+        Set(value As SFML.Graphics.Color)
+            _BorderColorFocused = value
+        End Set
+    End Property
+
     Public Property Z As Integer Implements ISFMLControl.Z
         Get
             Return _Z
@@ -211,12 +229,12 @@ Public Class SFMLTextbox
 
             'DisplayText.Position = New Vector2f(Location.X, Location.Y)
 
-            r.FillColor = SFML.Graphics.Color.Transparent
+            r.FillColor = Utils.ConvertColor(BackColor)
             r.OutlineThickness = OutlineTickness
             If IsActive Then
-                r.OutlineColor = _BorderColorFocused
+                r.OutlineColor = BorderColorFocused
             Else
-                r.OutlineColor = _BorderColor
+                r.OutlineColor = BorderColor
             End If
 
             'DisplayText.Position = Common.GetPositionHorizontal(TextAlign, DisplayText.GetLocalBounds, New FloatRect(Left, Top, Width, Height), New Vector2f(0 + TextOffset.X, -DisplayText.GetGlobalBounds.Height / 4 + TextOffset.Y))
@@ -247,19 +265,19 @@ Public Class SFMLTextbox
 
             If IsActive Then
                 'MsgBox("is active!")
-                BoundKeyboard.DrawToBoundTextbox(w)
+                BoundKeyboard.DrawToBoundControl(w)
             End If
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (GGeom.CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
+        If CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) OrElse (CheckIfRectangleIntersectsPoint(BoundKeyboard.Bounds, p) AndAlso IsActive = True) Then
             IsActive = True
             MyBase.OnClick(New EventArgs)
         Else

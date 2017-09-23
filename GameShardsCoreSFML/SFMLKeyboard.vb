@@ -2,14 +2,14 @@
 Imports System.Drawing
 Imports SFML.Graphics
 Imports SFML.System
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 
 Public Class SFMLKeyboard
     Inherits Panel
     Implements ISFMLControl
 
     Private Ut As New Utils
-    Dim GGeom As New Geometry
 
     'General
     Private _SizeWH As New Size(32 * 17, 32 * 6)
@@ -54,7 +54,7 @@ Public Class SFMLKeyboard
     'Public Shared SymbolsDownUpperCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
     'Public Shared AlphanumericLowerCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
     'Public Shared AlphanumericUpperCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
-    'Public Shared NumPad As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
+    Public Shared NumPad As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "✘", "0", "<--"}.ToList
     'Public Shared LettersOnlyLowerCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
     'Public Shared LettersOnlyUpperCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
     'Public Shared AlphaNumExtLowerCase As List(Of String) = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "?", "(", ")", "à", "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "!", "[", "]", "è", "°", "A", "S", "D", "F", "G", "H", "J", "K", "L", "_", ":", "{", "}", "ì", "#", "Z", "X", "C", "V", "B", "N", "M", ".", ",", "-", ";", "<", ">", "ò", "§", "€", """", "£", "$", "%", "&", "/", "\", "|", "=", "+", "*", "^", "ù", "é"}.ToList
@@ -328,22 +328,29 @@ Public Class SFMLKeyboard
         End Get
     End Property
 
-    Public Sub New(locat As Vector2f, size As Vector2f, fnt As SFML.Graphics.Font)
-        SetKeys(locat, size, 0, fnt)
+
+    Public Sub New(fnt As SFML.Graphics.Font, ui As KeyBoardUI)
+        SetKeys(New Vector2f(0, 0), New Vector2f(32 * 15 + 14 * KeyPadding, 32 * 6 + 5 * KeyPadding), 0, fnt, ui)
     End Sub
 
-    Public Sub New(fnt As SFML.Graphics.Font)
-        SetKeys(New Vector2f(0, 0), New Vector2f(32 * 15 + 14 * KeyPadding, 32 * 6 + 5 * KeyPadding), 0, fnt)
+    Public Sub New(fnt As SFML.Graphics.Font, locat As Vector2f, size As Vector2f, ui As KeyBoardUI)
+        SetKeys(locat, size, 0, fnt, ui)
     End Sub
 
     Public Function CalculateKeySize() As Size
-        Return New Size(((SizeWH.Width - 15 * KeyPadding) \ 16), (SizeWH.Height - 5 * KeyPadding) \ 6)
+        Select Case UI
+            Case KeyBoardUI.DefaultUI
+                Return New Size(((SizeWH.Width - 15 * KeyPadding) \ 16), (SizeWH.Height - 5 * KeyPadding) \ 6)
+            Case KeyBoardUI.NumPad
+                Return New Size((SizeWH.Width - 2 * KeyPadding) \ 3, (SizeWH.Height - 3 * KeyPadding) \ 4)
+        End Select
+
     End Function
 
     Public Sub SetKeyToggled(ByVal p As Point)
         For x = 0 To Keys.Count - 1
             Keys(x).IsToggled = False
-            If GGeom.CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
+            If CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
                 Keys(x).IsToggled = True
             End If
         Next
@@ -356,7 +363,7 @@ Public Class SFMLKeyboard
     ''' <param name="container"></param>
     Public Sub SetKeyPressed(ByVal p As Point, ByRef container As String)
         For x = 0 To Keys.Count - 1 'Keys.Count - 1
-            If GGeom.CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
+            If CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
                 Select Case True
                     Case Keys(x).IDStr.ToUpper = "BACKSPACE"
                         If container.Length > 0 Then
@@ -365,7 +372,7 @@ Public Class SFMLKeyboard
                     Case Keys(x).IDStr.ToUpper = "MAIUSC"
                         If EnableMAIUSC Then
                             IsUpper = (Not IsUpper)
-                            SetKeys(New Vector2f(Location.X, Location.Y), New Vector2f(SizeWH.Width, SizeWH.Height), KeyPadding, SFMLFont)
+                            SetKeys(New Vector2f(Location.X, Location.Y), New Vector2f(SizeWH.Width, SizeWH.Height), KeyPadding, SFMLFont, UI)
                         End If
                     Case Keys(x).IDStr.ToUpper = "SPACEBAR"
                         If EnableSpacebar Then
@@ -400,7 +407,7 @@ Public Class SFMLKeyboard
         Next
     End Sub
 
-    Sub SetKeys(locat As Vector2f, sz As Vector2f, padd As Integer, fnt As SFML.Graphics.Font)
+    Sub SetKeys(locat As Vector2f, sz As Vector2f, padd As Integer, fnt As SFML.Graphics.Font, UI As KeyBoardUI)
         KeyShifting = 0
         SizeWH = New Size(sz.X, sz.Y)
         Location = New Point(locat.X, locat.Y)
@@ -409,74 +416,112 @@ Public Class SFMLKeyboard
         Keys = Nothing
         Keys = New List(Of SFMLButton)
         CurCharset = SetCharset()
-        For y = 0 To 5
-            For x = 0 To 15
-                'If Not JumpNext Then
-                'JumpNext = False
-                Dim b As New SFMLButton
-                With b
 
-                    .TextAlign = ContentAlignment.MiddleCenter
-                    .Text = CurCharset(y * 16 + x - KeyShifting)
-                    .SFMLFont = fnt
-                    .SFMLFontSize = Font.SizeInPoints
-                    .Toggleable = True
-                    .ToggleChangesSprite = False
-                    .ToggleChangesColor = True
-                    .Size = New Size(CalculateKeySize.Width, CalculateKeySize.Height)
-                    .Location = New Point(locat.X + CalculateKeySize.Width * x + x * KeyPadding, locat.Y + CalculateKeySize.Height * y + y * KeyPadding)
-                    Select Case True
-                        Case b.Text = "<--"
-                            b.IDStr = "BACKSPACE"
-                            b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
-                            x += 1
-                            KeyShifting += 1
-                        Case b.Text = "ENTER"
-                            b.IDStr = "ENTER"
-                            b.Text = "↵"
-                            b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
-                            x += 1
-                            KeyShifting += 1
-                        Case b.Text = "MAIUSC"
-                            b.IDStr = "MAIUSC"
-                            b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
-                            x += 1
+        Select Case True
+            Case UI = KeyBoardUI.DefaultUI
 
-                            KeyShifting += 1
-                        Case b.Text = "SPACEBAR"
-                            b.IDStr = "SPACEBAR"
-                            b.Text = " "
-                            b.Size = New Size(5 * CalculateKeySize.Width + 4 * KeyPadding, b.Size.Height)
-                            x += 4
-                            KeyShifting += 4
-                        Case b.Text = "✂" '"✂"
-                            b.IDStr = "CUT"
-                            b.Text = "✂"
-                        Case b.Text = "✎"
-                            b.IDStr = "COPY"
-                        Case b.Text = "⇒"
-                            b.IDStr = "PASTE"
-                        Case b.Text = "✘"
-                            b.IDStr = "CLEAR"
-                        Case Else
-                            b.IDStr = "ELSEKEY"
-                    End Select
-                    Keys.Add(b)
-                End With
-                'End If
-            Next
-        Next
+                '##############################DEFAULT UI
+                For y = 0 To 5
+                    For x = 0 To 15
+                        Dim b As New SFMLButton
+                        With b
+
+                            .TextAlign = ContentAlignment.MiddleCenter
+                            .Text = CurCharset(y * 16 + x - KeyShifting)
+                            .SFMLFont = fnt
+                            .SFMLFontSize = Font.SizeInPoints
+                            .Toggleable = True
+                            .ToggleChangesSprite = False
+                            .ToggleChangesColor = True
+                            .Size = New Size(CalculateKeySize.Width, CalculateKeySize.Height)
+                            .Location = New Point(locat.X + CalculateKeySize.Width * x + x * KeyPadding, locat.Y + CalculateKeySize.Height * y + y * KeyPadding)
+
+                            Select Case True
+                                Case b.Text = "<--"
+                                    b.IDStr = "BACKSPACE"
+                                    b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
+                                    x += 1
+                                    KeyShifting += 1
+                                Case b.Text = "ENTER"
+                                    b.IDStr = "ENTER"
+                                    b.Text = "↵"
+                                    b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
+                                    x += 1
+                                    KeyShifting += 1
+                                Case b.Text = "MAIUSC"
+                                    b.IDStr = "MAIUSC"
+                                    b.Size = New Size(2 * CalculateKeySize.Width + KeyPadding, b.Size.Height)
+                                    x += 1
+                                    KeyShifting += 1
+                                Case b.Text = "SPACEBAR"
+                                    b.IDStr = "SPACEBAR"
+                                    b.Text = " "
+                                    b.Size = New Size(5 * CalculateKeySize.Width + 4 * KeyPadding, b.Size.Height)
+                                    x += 4
+                                    KeyShifting += 4
+                                Case b.Text = "✂" '"✂"
+                                    b.IDStr = "CUT"
+                                    b.Text = "✂"
+                                Case b.Text = "✎"
+                                    b.IDStr = "COPY"
+                                Case b.Text = "⇒"
+                                    b.IDStr = "PASTE"
+                                Case b.Text = "✘"
+                                    b.IDStr = "CLEAR"
+                                Case Else
+                                    b.IDStr = "ELSEKEY"
+                            End Select
+                            Keys.Add(b)
+                        End With
+                        'End If
+                    Next
+                Next
+
+            Case UI = KeyBoardUI.NumPad
+
+                '################################KEYPAD UI
+                For y = 0 To 3
+                    For x = 0 To 2
+                        Dim b As New SFMLButton
+                        With b
+
+                            .TextAlign = ContentAlignment.MiddleCenter
+                            .Text = CurCharset(y * 3 + x - KeyShifting)
+                            .SFMLFont = fnt
+                            .SFMLFontSize = Font.SizeInPoints
+                            .Toggleable = True
+                            .ToggleChangesSprite = False
+                            .ToggleChangesColor = True
+                            .Size = New Size(CalculateKeySize.Width, CalculateKeySize.Height)
+                            .Location = New Point(locat.X + CalculateKeySize.Width * x + x * KeyPadding, locat.Y + CalculateKeySize.Height * y + y * KeyPadding)
+                            Select Case True
+                                Case b.Text = "<--"
+                                    b.IDStr = "BACKSPACE"
+                                Case b.Text = "✘"
+                                    b.IDStr = "CLEAR"
+                                Case Else
+                                    b.IDStr = "ELSEKEY"
+                            End Select
+                            Keys.Add(b)
+                        End With
+                        'End If
+                    Next
+                Next
+        End Select
+
     End Sub
 
     Public Function SetCharset() As List(Of String)
         RaiseEvent onCharsetChanged() '(New CharsetChangedEventArgs([List (Of String)] UI))
-        Select Case UI
-            Case KeyBoardUI.DefaultUI
+        Select Case True
+            Case UI = KeyBoardUI.DefaultUI
                 If IsUpper Then
                     Return DefaultCharsUpperCase
                 Else
                     Return DefaultCharsLowerCase
                 End If
+            Case UI = KeyBoardUI.NumPad
+                Return NumPad
             Case Else
                 Return DefaultCharsUpperCase
         End Select
@@ -522,7 +567,7 @@ Public Class SFMLKeyboard
     '    End If
     'End Sub
 
-    Public Sub DrawToBoundTextbox(ByVal w As RenderWindow)
+    Public Sub DrawToBoundControl(ByVal w As RenderWindow)
         If Visible Then
             Dim ft As New SFML.Graphics.Font(Utils.ConvertFont(Font))
             For x = 0 To Keys.Count - 1
@@ -598,13 +643,20 @@ Public Class SFMLKeyboard
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+            For x = 0 To Keys.Count - 1
+                If CheckIfRectangleIntersectsPoint(Keys(x).Bounds, p) Then
+                    Keys(x).IsToggled = True
+                Else
+                    Keys(x).IsToggled = False
+                End If
+            Next
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnClick(New EventArgs)
         End If
     End Sub

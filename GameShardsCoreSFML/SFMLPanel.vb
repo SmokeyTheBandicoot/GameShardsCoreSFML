@@ -2,14 +2,13 @@
 Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports GameShardsCoreSFML
 
 Public Class SFMLPanel
     Inherits Panel
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
 
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _BorderColorDisabled As New SFML.Graphics.Color(64, 64, 64)
@@ -110,13 +109,13 @@ Public Class SFMLPanel
     End Property
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnClick(New EventArgs)
         End If
     End Sub

@@ -1,14 +1,13 @@
 ﻿Imports SFML.Graphics
 Imports SFML.System
 Imports System.Drawing
-Imports GameShardsCore
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Windows.Forms
 
 Public Class SFMLGroupbox
     Inherits GroupBox
     Implements ISFMLControl
-
-    Dim GGeom As New Base.Geometry.Geometry
 
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _BorderColorDisabled As New SFML.Graphics.Color(128, 128, 128)
@@ -181,13 +180,13 @@ Public Class SFMLGroupbox
     End Property
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnClick(New EventArgs)
         End If
     End Sub

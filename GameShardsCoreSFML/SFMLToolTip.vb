@@ -1,14 +1,13 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports SFML.Graphics
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports SFML.System
 
 Public Class SFMLToolTip
     Inherits ToolTip
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
 
     Private _BorderColor As New SFML.Graphics.Color(0, 0, 0)
     Private _ContentColor As New SFML.Graphics.Color(255, 255, 255)
@@ -106,7 +105,7 @@ Public Class SFMLToolTip
     Public Sub CheckHover(p As Point) Implements ISFMLControl.CheckHover
         If RectList.Count > 0 Then
             For x = 0 To RectList.Count - 1
-                If GGeom.CheckIfRectangleIntersectsPoint(RectList(x), p) Then
+                If CheckIfRectangleIntersectsPoint(RectList(x), p) Then
                     ActiveControl = x
                     MouseLoc = New Point(p.X, p.Y)
                     Exit For
@@ -120,12 +119,12 @@ Public Class SFMLToolTip
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
         If Not ActiveControl = -1 Then
             r = New RectangleShape
-            't = New Text(StringList(ActiveControl), SFMLFont, SFMLFontSize)
-            t = New Text("ToolTip", SFMLFont, SFMLFontSize)
+            t = New Text(StringList(ActiveControl), SFMLFont, SFMLFontSize)
+            't = New Text("ToolTip", SFMLFont, SFMLFontSize)
             t.Color = Utils.ConvertColor(ForeColor)
-            t.Position = New Vector2f(MouseLoc.X + 2, MouseLoc.Y + 2)
-            r.Position = New Vector2f(MouseLoc.X, MouseLoc.Y)
-            r.Size = New Vector2f(t.GetGlobalBounds.Width + 4, t.GetGlobalBounds.Height + 4)
+            t.Position = New Vector2f(MouseLoc.X + 2 + Cursor.Current.Size.Width, MouseLoc.Y + 2)
+            r.Position = New Vector2f(MouseLoc.X + Cursor.Current.Size.Width, MouseLoc.Y)
+            r.Size = New Vector2f(t.GetGlobalBounds.Width + 4, t.GetGlobalBounds.Height + 8)
             r.FillColor = ContentColor
             r.OutlineColor = BorderColor
             r.OutlineThickness = -1

@@ -49,8 +49,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GameShardsCoreBETA">
-      <HintPath>..\..\..\..\Visual Studio 2010\Projects\GameShardsCoreBETA-FrameWork3.5-v0.0.0.1\bin\Debug\GameShardsCoreBETA.dll</HintPath>
+    <Reference Include="GameShardsCore2">
+      <HintPath>..\..\GameShardsCore2\GameShardsCore2\bin\Debug\GameShardsCore2.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-graphics-2">
       <HintPath>..\..\..\..\..\Desktop\Gameshards\Librerie\SFML.NET\x86\lib\sfmlnet-graphics-2.dll</HintPath>
@@ -126,6 +126,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SFMLNumericUpDown.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SFMLPanel.vb">

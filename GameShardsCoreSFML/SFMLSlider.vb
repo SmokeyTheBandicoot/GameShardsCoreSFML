@@ -1,8 +1,8 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports SFML.Graphics
-Imports GameShardsCore.Base.Geometry
-Imports GameShardsCore.Base
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Math
 Imports SFML.System
 Imports GameShardsCoreSFML
@@ -10,9 +10,6 @@ Imports GameShardsCoreSFML
 Public Class SFMLSlider
     Inherits TrackBar
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
-    Dim GMath As New Math.Operators
 
     Private _SFMLFont As SFML.Graphics.Font
     Private _SFMLFontSize As Single = 16
@@ -186,7 +183,7 @@ Public Class SFMLSlider
     End Function
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
             If IsClicking Then
                 Value = GetValueFromClick(p)
             End If
@@ -195,7 +192,7 @@ Public Class SFMLSlider
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left - 1, Top - 1, Width + 2, Height + 2), p) Then
             'Main Bar
 
             IsClicking = True

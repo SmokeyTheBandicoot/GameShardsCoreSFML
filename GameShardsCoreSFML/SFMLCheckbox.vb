@@ -1,14 +1,13 @@
 ﻿Imports System.Windows.Forms
 Imports SFML.Graphics
 Imports SFML.System
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports System.Drawing
 
 Public Class SFMLCheckbox
     Inherits CheckBox
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
 
     Private _OutlineTickness As Integer = -1
     Private _DisplayText As New Text
@@ -247,26 +246,28 @@ Public Class SFMLCheckbox
         AutoSize = True
     End Sub
 
-    Public Sub ChangeCheckedState(ByVal p As Drawing.Point)
-        'Checked --> Unchecked --> Indeterminate
-        'MsgBox("Changing...")
-        'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(r.GetGlobalBounds.Left, r.GetGlobalBounds.Top, r.GetGlobalBounds.Width, r.GetGlobalBounds.Height), p) Then
-        'If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, BoxSize.Width, BoxSize.Height), p) Then
-        If CheckState = CheckState.Checked Then
-            CheckState = CheckState.Unchecked
-        ElseIf CheckState = CheckState.Unchecked Then
-            If CycleIndeterminate Then
-                CheckState = CheckState.Indeterminate
-            Else
-                CheckState = CheckState.Checked
-            End If
-        Else
-            CheckState = CheckState.Checked
-        End If
-        'MsgBox("changed to " + CheckState.ToString)
+    Public Sub ChangeCheckedState()
 
-        'MyBase.OnCheckStateChanged(New EventArgs)
+        'If CheckState = CheckState.Checked Then
+        '    CheckState = CheckState.Unchecked
+        'ElseIf CheckState = CheckState.Unchecked Then
+        '    If CycleIndeterminate Then
+        '        CheckState = CheckState.Indeterminate
+        '    Else
+        '        CheckState = CheckState.Checked
+        '    End If
+        'Else
+        '    CheckState = CheckState.Checked
         'End If
+
+        If CycleIndeterminate Then
+            If Me.CheckState = CheckState.Unchecked Then
+                Me.CheckState = CheckState.Indeterminate
+            End If
+        ElseIf CheckState = CheckState.Indeterminate Then
+            Me.CheckState = CheckState.Unchecked
+        End If
+
     End Sub
 
     Private Sub ISFMLControl_Draw(ByRef w As RenderWindow) Implements ISFMLControl.Draw
@@ -335,7 +336,7 @@ Public Class SFMLCheckbox
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Location.X, Location.Y, Size.Width, Size.Height), p) Then
             IsHovered = True
         Else
             IsHovered = False
@@ -345,9 +346,10 @@ Public Class SFMLCheckbox
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then 'Or GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(r.Position.X, r.Position.Y, r.Size.X, r.Size.Y), p) Then
-            ChangeCheckedState(p)
-            'MyBase.OnClick(New EventArgs)
+        If CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(r.GetGlobalBounds), p) Or CheckIfRectangleIntersectsPoint(Utils.FloatRectToRect(DisplayText.GetGlobalBounds), p) Then 'Or CheckIfRectangleIntersectsPoint(New Rectangle(r.Position.X, r.Position.Y, r.Size.X, r.Size.Y), p) Then
+            'ChangeCheckedState(p)
+            MyBase.OnClick(New EventArgs)
+            'ChangeCheckedState()
         End If
     End Sub
 

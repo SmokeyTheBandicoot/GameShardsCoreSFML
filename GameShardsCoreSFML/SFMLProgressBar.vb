@@ -1,15 +1,14 @@
 ﻿Imports SFML.Graphics
 Imports System.Windows.Forms
 Imports System.Drawing
-Imports GameShardsCore.Base.Geometry
+Imports GameShardsCore2
+Imports GameShardsCore2.Geometry.Geometry2D
 Imports SFML.System
 Imports GameShardsCoreSFML
 
 Public Class SFMLProgressBar
     Inherits ProgressBar
     Implements ISFMLControl
-
-    Dim GGeom As New Geometry
 
     Dim Border As New RectangleShape
     'Dim Content As New RectangleShape
@@ -159,13 +158,13 @@ Public Class SFMLProgressBar
     End Sub
 
     Private Sub ISFMLControl_CheckHover(p As Point) Implements ISFMLControl.CheckHover
-        If GGeom.CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Drawing.Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnMouseHover(New EventArgs)
         End If
     End Sub
 
     Private Sub ISFMLControl_CheckClick(p As Point) Implements ISFMLControl.CheckClick
-        If GGeom.CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
+        If CheckIfRectangleIntersectsPoint(New Rectangle(Left, Top, Width, Height), p) Then
             MyBase.OnClick(New EventArgs)
         End If
     End Sub
