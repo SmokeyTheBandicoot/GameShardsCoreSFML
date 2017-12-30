@@ -369,7 +369,6 @@ Public Class SFMLTrackbar
                 val.Color = Utils.ConvertColor(ForeColor)
                 val.Position = New Vector2f(Location.X + Size.Width / 2 - val.GetGlobalBounds.Width / 2, Location.Y + BarThickNess + TickOffsetY + min.GetGlobalBounds.Height + 5)
 
-                w.Draw(dot)
                 w.Draw(lt)
                 w.Draw(llt)
                 w.Draw(lllt)
@@ -380,6 +379,7 @@ Public Class SFMLTrackbar
                 w.Draw(min)
                 w.Draw(max)
                 w.Draw(val)
+                w.Draw(dot)
 
                 If TickStyle = TickStyle.Both Or TickStyle = TickStyle.BottomRight Then
                     For x = 0 To TickNumber - 1
@@ -522,7 +522,7 @@ Public Class SFMLTrackbar
                 val.Color = Utils.ConvertColor(ForeColor)
                 val.Position = New Vector2f(Location.X + BarThickNess + TickOffsetX + min.GetGlobalBounds.Height + 5, Location.Y + Size.Height / 2 - val.GetGlobalBounds.Height / 2)
 
-                w.Draw(dot)
+
                 w.Draw(lt)
                 w.Draw(llt)
                 w.Draw(lllt)
@@ -533,6 +533,7 @@ Public Class SFMLTrackbar
                 w.Draw(min)
                 w.Draw(max)
                 w.Draw(val)
+                w.Draw(dot)
 
                 If TickStyle = TickStyle.Both Or TickStyle.BottomRight Then
                     For x = 0 To TickNumber - 1

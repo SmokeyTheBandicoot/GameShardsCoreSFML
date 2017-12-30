@@ -155,6 +155,7 @@
     <Compile Include="SFMLTrackbar.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ShapeDrawer.vb" />
     <Compile Include="Shared.vb" />
     <Compile Include="Utils.vb" />
   </ItemGroup>
